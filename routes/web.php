@@ -37,4 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
+Route::resource('menu', MenuController::class);
+
+
 require __DIR__.'/auth.php';
