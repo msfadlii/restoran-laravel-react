@@ -3,6 +3,9 @@ import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, useForm } from "@inertiajs/react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { useState } from "react";
 
 export default function Index({ menus, queryParams = null }) {
@@ -38,10 +41,56 @@ export default function Index({ menus, queryParams = null }) {
   const deleteMenu = (menu) => {
     if (confirm(`Hapus menu ${menu.nama}?`)) {
       router.delete(route("menu.destroy", menu.id), {
-        onSuccess: () => console.log("Menu berhasil dihapus!"),
+        onSuccess: () => {
+          toast.success("Menu berhasil dihapus!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        },
+        onError: () => {
+          toast.error("Gagal menghapus menu!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        },
       });
     }
   };
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+    });
+  };
+
+  // Fungsi untuk menambah, update, dan delete
+  const handleAddMenu = () => {
+    // Pastikan bahwa setelah menambah menu, Anda memanggil toast.success
+    router.post(route('menu.store'), data, {
+      onSuccess: () => {
+        toast.success("Menu berhasil ditambahkan!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      },
+      onError: () => {
+        toast.error("Gagal menambahkan menu!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      },
+    });
+  };
+
+
 
   return (
     <AuthenticatedLayout
@@ -116,7 +165,7 @@ export default function Index({ menus, queryParams = null }) {
                           Edit
                         </button>
                         <button
-                          onClick={() => deleteMenu(menu)}
+                          onClick={(handleDeleteMenu) => deleteMenu(menu)}
                           className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                         >
                           Delete
@@ -135,6 +184,8 @@ export default function Index({ menus, queryParams = null }) {
       {isModalOpen && (
         <EditModal menu={selectedMenu} isOpen={isModalOpen} onClose={closeModal} />
       )}
+
+      <ToastContainer />
     </AuthenticatedLayout>
   );
 }
@@ -160,7 +211,11 @@ function EditModal({ menu, isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     put(route("menu.update", menu.id), {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        toast.success("Menu berhasil diperbarui!");
+      },
+      onError: () => toast.error("Gagal memperbarui menu!"),
     });
   };
 
