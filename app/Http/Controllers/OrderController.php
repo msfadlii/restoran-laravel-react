@@ -90,46 +90,57 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         Log::info('Received data:', $request->all());
-
+    
         // Validasi data
         $request->validate([
             'status' => 'required|string',
             'menu_items' => 'required|array',
-            'total_price' => 'required|numeric',
         ]);
     
         // Cari order berdasarkan ID
         $order = Order::find($id);
     
-        // Pastikan order ditemukan
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
     
-        // Hapus order items lama jika ada perubahan
-        $order->orderItems()->delete();
+        // Total harga baru
+        $newTotalPrice = 0;
     
-        // Tambahkan menu items yang baru
+        // Tambahkan atau perbarui menu items
         foreach ($request->menu_items as $item) {
-            $order->orderItems()->create([
-                'menu_id' => $item['menu_id'],
-                'quantity' => $item['quantity'],
-                'harga' => $item['price'],
-            ]);
-        }
-        Log::info('Updating order:', [
-            'order_id' => $order->id,
-            'status' => $request->status,
-            'total_harga' => $request->total_price,
-        ]);
+            $existingItem = $order->orderItems()->where('menu_id', $item['menu_id'])->first();
     
-        // Perbarui status dan total price
+            if ($existingItem) {
+                // Jika item sudah ada, perbarui quantity dan harga total
+                $existingItem->quantity += $item['quantity'];
+                $existingItem->harga = $item['price'];
+                $existingItem->save();
+            } else {
+                // Jika item baru, tambahkan ke order
+                $order->orderItems()->create([
+                    'menu_id' => $item['menu_id'],
+                    'quantity' => $item['quantity'],
+                    'harga' => $item['price'],
+                ]);
+            }
+    
+            // Hitung harga total dari semua item
+            $newTotalPrice += $item['price'] * $item['quantity'];
+        }
+    
+        // Perbarui total harga dan status di order
+        $order->total_harga = $newTotalPrice;
         $order->status = $request->status;
-        $order->total_harga = $request->total_price;
         $order->save();
     
-        return response()->json(['success' => 'Order updated successfully!']);
+    
+        return redirect()->route('order.show', $order->id);
+                            
+        
     }
+    
+
     
     
     
