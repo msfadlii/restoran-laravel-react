@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'test',
         ]);
 
+         User::factory(20)->create();
+
         Menu::factory(10)->create();
 
         Order::factory(5)->create()->each(function ($order) {

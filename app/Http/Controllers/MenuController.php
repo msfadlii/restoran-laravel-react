@@ -34,12 +34,26 @@ class MenuController extends Controller
 
     public function create()
     {
-        //
-    }
+        return inertia('Menu/CreateMenu');  // Pastikan ini mengarah ke komponen Inertia React yang benar
+    }       
 
     public function store(Request $request)
-    {
-        //
+{
+    // Validasi data
+    $validatedData = $request->validate([
+        'nama' => 'required|string|max:255',
+        'kategori' => 'required|string',
+        'harga' => 'required|numeric',
+        'deskripsi' => 'nullable|string',
+        'image' => 'nullable|image|max:2048', // Gambar opsional
+    ]);
+
+    // Jika ada file gambar, simpan gambar
+    if ($request->hasFile('image')) {
+        $validatedData['image'] = $request->file('image')->store('menu-images', 'public');
+    } else {
+        // Jika tidak ada gambar, set image sebagai null
+        $validatedData['image'] = null;
     }
 
  
@@ -51,7 +65,7 @@ class MenuController extends Controller
   
     public function edit(string $id)
     {
-        //
+        return inertia('Menu/EditMenu');
     }
 
    
@@ -62,7 +76,12 @@ class MenuController extends Controller
 
     
     public function destroy(string $id)
-    {
-        //
-    }
+{
+    $menu = Menu::findOrFail($id);
+
+    
+    $menu->delete();
+
+    return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus!');
+}
 }

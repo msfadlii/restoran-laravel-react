@@ -29,6 +29,9 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::resource('menu', MenuController::class);
     Route::resource('order', OrderController::class);
     Route::resource('transaksi', TransaksiController::class);
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+    
 });
 
 Route::middleware('auth')->group(function () {
@@ -36,5 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
+Route::resource('menu', MenuController::class);
+
+
 
 require __DIR__.'/auth.php';
