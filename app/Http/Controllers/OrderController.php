@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Menu;
+
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -10,84 +11,46 @@ use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        $query = Order::with('user', 'orderItems.menu'); // Ambil relasi user dan item pesanan
-    
-        // Filter berdasarkan nama customer
-        if (request('customer')) {
-            $query->whereHas('user', function ($q) {
-                $q->where('name', 'like', '%' . request('customer') . '%');
-            });
-        }
-    
-        // Filter berdasarkan status pesanan
-        if (request('status')) {
-            $query->where('status', request('status'));
-        }
-    
-        // Filter berdasarkan rentang total harga
-        if (request('min_total')) {
-            $query->where('total_harga', '>=', request('min_total'));
-        }
-        if (request('max_total')) {
-            $query->where('total_harga', '<=', request('max_total'));
-        }
-    
-        // Ambil data pesanan dengan pagination
-        $orders = $query->latest()->paginate(10);
-    
-        return inertia('Order/Index', [
-            'orders' => Order::with('user')->paginate(10), // Kirim data paginated ke frontend
+        $query = Order::query();
+
+        $sortField = request("sort_field", 'id');
+        $sortDirection = request("sort_direction", 'desc');
+
+        $orders = $query->orderBy($sortField, $sortDirection)->paginate(10);
+
+        return inertia("Order/Index", [
+            "orders" => OrderResource::collection($orders),
+            "queryParams" => request()->query() ?: null,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+   
+    public function show(string $id)
     {
         $order = Order::with(['user', 'orderItems.menu'])->findOrFail($id);
 
-        return Inertia::render('Order/Show', [
-            'order' => $order
-        ]);
     }
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-{
-    $menus = Menu::all(); // Ambil semua menu
-    return inertia('Order/Edit', [
-        'order' => $order,
-        'menus' => $menus, // Pastikan menus dikirim ke frontend
-    ]);
-}
+    
+    public function edit(string $id)
+    {
+        //
+    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         Log::info('Received data:', $request->all());
     
@@ -142,12 +105,7 @@ class OrderController extends Controller
     
 
     
-    
-    
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $order = Order::findOrFail($id);
         $order->delete();

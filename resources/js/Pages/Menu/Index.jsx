@@ -2,9 +2,8 @@ import Pagination from "@/Components/Pagination";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, router, useForm } from "@inertiajs/react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Head, Link, router } from "@inertiajs/react";
+import TableHeading from "@/Components/TableHeading";
 
 import { useState } from "react";
 
@@ -38,59 +37,19 @@ export default function Index({ menus, queryParams = null }) {
     searchFieldChanged(nama, e.target.value);
   };
 
-  const deleteMenu = (menu) => {
-    if (confirm(`Hapus menu ${menu.nama}?`)) {
-      router.delete(route("menu.destroy", menu.id), {
-        onSuccess: () => {
-          toast.success("Menu berhasil dihapus!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-        },
-        onError: () => {
-          toast.error("Gagal menghapus menu!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-        },
-      });
+  const sortChanged = (nama) => {
+    if (nama === queryParams.sort_field) {
+      if (queryParams.sort_direction === "asc") {
+        queryParams.sort_direction = "desc";
+      } else {
+        queryParams.sort_direction = "asc";
+      }
+    } else {
+      queryParams.sort_field = nama;
+      queryParams.sort_direction = "asc";
     }
+    router.get(route("menu.index"), queryParams);
   };
-
-  const notifySuccess = (message) => {
-    toast.success(message, {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000,
-    });
-  };
-
-  const notifyError = (message) => {
-    toast.error(message, {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000,
-    });
-  };
-
-  // Fungsi untuk menambah, update, dan delete
-  const handleAddMenu = () => {
-    // Pastikan bahwa setelah menambah menu, Anda memanggil toast.success
-    router.post(route('menu.store'), data, {
-      onSuccess: () => {
-        toast.success("Menu berhasil ditambahkan!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
-      },
-      onError: () => {
-        toast.error("Gagal menambahkan menu!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
-      },
-    });
-  };
-
-
 
   return (
     <AuthenticatedLayout
@@ -104,30 +63,117 @@ export default function Index({ menus, queryParams = null }) {
       <div className="py-12">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-            <div className="flex justify-between items-center p-6">
-              <Link
-                href={route("menu.create")}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                Tambah Menu
-              </Link>
-              <div className="flex space-x-4">
-                <TextInput
-                  className="w-64"
-                  defaultValue={queryParams.nama}
-                  placeholder="Nama Menu"
-                  onBlur={(e) => searchFieldChanged("nama", e.target.value)}
-                  onKeyPress={(e) => onKeyPress("nama", e)}
-                />
-                <SelectInput
-                  className="w-64"
-                  defaultValue={queryParams.kategori}
-                  onChange={(e) => searchFieldChanged("kategori", e.target.value)}
-                >
-                  <option value="">Select Kategori</option>
-                  <option value="makanan">Makanan</option>
-                  <option value="minuman">Minuman</option>
-                </SelectInput>
+            <div className="p-6 text-gray-900 dark:text-gray-100">
+              <div className="overflow-auto">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
+                    <tr className="text-nowrap">
+                      <TableHeading
+                        name="id"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                      >
+                        ID
+                      </TableHeading>
+                      <th className="px-3 py-3">Gambar</th>
+                      <TableHeading
+                        name="nama"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                      >
+                        Nama
+                      </TableHeading>
+                      <TableHeading
+                        name="kategori"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                      >
+                        Kategori
+                      </TableHeading>
+                      <TableHeading
+                        name="harga"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                      >
+                        Harga
+                      </TableHeading>
+                      <th className="px-3 py-3">Deskripsi</th>
+                      <th className="px-3 py-3">Action</th>
+                    </tr>
+                  </thead>
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
+                    <tr className="text-nowrap">
+                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3">
+                        <TextInput
+                          className="w-full"
+                          defaultValue={queryParams.nama}
+                          placeholder="Nama Menu"
+                          onBlur={(e) =>
+                            searchFieldChanged("nama", e.target.value)
+                          }
+                          onKeyPress={(e) => onKeyPress("nama", e)}
+                        />
+                      </th>
+                      <th className="px-3 py-3">
+                        <SelectInput
+                          className="w-full"
+                          defaultValue={queryParams.kategori}
+                          onChange={(e) =>
+                            searchFieldChanged("kategori", e.target.value)
+                          }
+                        >
+                          <option value="">Select Kategori</option>
+                          <option value="makanan">Makanan</option>
+                          <option value="minuman">Minuman</option>
+                        </SelectInput>
+                      </th>
+                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {menus.data.map((menu) => (
+                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td className="px-3 py-2">{menu.id}</td>
+                        <td className="px-3 py-2">
+                          <img src={menu.image} style={{ width: 60 }} />
+                        </td>
+                        <td className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
+                          {menu.nama}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {menu.kategori}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">{menu.harga}</td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {menu.deskripsi}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">
+                          <Link
+                            href={route("menu.edit", menu.id)}
+                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            onClick={(e) => deleteProject(menu)}
+                            className="font-medium text-red-600 
+                        dark:text-red-500 hover:underline mx-1"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
             <div className="overflow-auto">
@@ -151,12 +197,18 @@ export default function Index({ menus, queryParams = null }) {
                     >
                       <td className="px-3 py-2">{menu.id}</td>
                       <td className="px-3 py-2">
-                        <img src={menu.image} alt={menu.nama} style={{ width: 60 }} />
+                        <img
+                          src={menu.image}
+                          alt={menu.nama}
+                          style={{ width: 60 }}
+                        />
                       </td>
                       <td className="px-3 py-2 text-nowrap">{menu.nama}</td>
                       <td className="px-3 py-2">{menu.kategori}</td>
                       <td className="px-3 py-2">{menu.harga}</td>
-                      <td className="px-3 py-2 text-nowrap">{menu.deskripsi}</td>
+                      <td className="px-3 py-2 text-nowrap">
+                        {menu.deskripsi}
+                      </td>
                       <td className="px-3 py-2 text-right">
                         <button
                           onClick={() => openModal(menu)}
@@ -182,7 +234,11 @@ export default function Index({ menus, queryParams = null }) {
       </div>
 
       {isModalOpen && (
-        <EditModal menu={selectedMenu} isOpen={isModalOpen} onClose={closeModal} />
+        <EditModal
+          menu={selectedMenu}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
       )}
 
       <ToastContainer />
@@ -225,7 +281,9 @@ function EditModal({ menu, isOpen, onClose }) {
         <h2 className="text-lg font-semibold mb-4">Edit Menu</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nama</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Nama
+            </label>
             <input
               type="text"
               name="nama"
@@ -236,7 +294,9 @@ function EditModal({ menu, isOpen, onClose }) {
             {errors.nama && <span className="text-red-500">{errors.nama}</span>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Kategori</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Kategori
+            </label>
             <select
               name="kategori"
               value={data.kategori}
@@ -247,10 +307,14 @@ function EditModal({ menu, isOpen, onClose }) {
               <option value="makanan">Makanan</option>
               <option value="minuman">Minuman</option>
             </select>
-            {errors.kategori && <span className="text-red-500">{errors.kategori}</span>}
+            {errors.kategori && (
+              <span className="text-red-500">{errors.kategori}</span>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Harga</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Harga
+            </label>
             <input
               type="number"
               name="harga"
@@ -258,27 +322,37 @@ function EditModal({ menu, isOpen, onClose }) {
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
             />
-            {errors.harga && <span className="text-red-500">{errors.harga}</span>}
+            {errors.harga && (
+              <span className="text-red-500">{errors.harga}</span>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Deskripsi</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Deskripsi
+            </label>
             <textarea
               name="deskripsi"
               value={data.deskripsi}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
             />
-            {errors.deskripsi && <span className="text-red-500">{errors.deskripsi}</span>}
+            {errors.deskripsi && (
+              <span className="text-red-500">{errors.deskripsi}</span>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Gambar</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Gambar
+            </label>
             <input
               type="file"
               name="image"
               onChange={handleFileChange}
               className="mt-1 block w-full text-sm border border-gray-300 rounded-md"
             />
-            {errors.image && <span className="text-red-500">{errors.image}</span>}
+            {errors.image && (
+              <span className="text-red-500">{errors.image}</span>
+            )}
           </div>
           <div className="flex justify-end space-x-4">
             <button
