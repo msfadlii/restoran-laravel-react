@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class OrderResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'user_id' => new UserResource($this->user_id),
+            'total_harga' => $this->total_harga,
+            'status' => $this->status,
+            'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
+        ];
+    }
+}

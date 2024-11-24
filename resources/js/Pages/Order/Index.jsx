@@ -1,11 +1,11 @@
 import Pagination from "@/Components/Pagination";
 import SelectInput from "@/Components/SelectInput";
-import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
+import { ORDER_STATUS_CLASS_MAP, ORDER_STATUS_TEXT_MAP } from "@/constants";
 
-export default function index({ menus, queryParams = null }) {
+export default function index({ orders, queryParams = null }) {
   queryParams = queryParams || {};
   const searchFieldChanged = (nama, value) => {
     if (value) {
@@ -14,7 +14,7 @@ export default function index({ menus, queryParams = null }) {
       delete queryParams[nama];
     }
 
-    router.get(route("menu.index"), queryParams);
+    router.get(route("order.index"), queryParams);
   };
 
   const onKeyPress = (nama, e) => {
@@ -34,18 +34,18 @@ export default function index({ menus, queryParams = null }) {
       queryParams.sort_field = nama;
       queryParams.sort_direction = "asc";
     }
-    router.get(route("menu.index"), queryParams);
+    router.get(route("order.index"), queryParams);
   };
 
   return (
     <AuthenticatedLayout
       header={
         <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-          Menu
+          Order
         </h2>
       }
     >
-      <Head title="Menu" />
+      <Head title="Order" />
       <div className="py-12">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
@@ -62,32 +62,38 @@ export default function index({ menus, queryParams = null }) {
                       >
                         ID
                       </TableHeading>
-                      <th className="px-3 py-3">Gambar</th>
                       <TableHeading
-                        name="nama"
+                        name="user_id"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Nama
+                        User ID
                       </TableHeading>
                       <TableHeading
-                        name="kategori"
+                        name="total_harga"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Kategori
+                        Total Harga
                       </TableHeading>
                       <TableHeading
-                        name="harga"
+                        name="status"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Harga
+                        Status
                       </TableHeading>
-                      <th className="px-3 py-3">Deskripsi</th>
+                      <TableHeading
+                        name="created_at"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                      >
+                        Create Date
+                      </TableHeading>
                       <th className="px-3 py-3">Action</th>
                     </tr>
                   </thead>
@@ -95,61 +101,56 @@ export default function index({ menus, queryParams = null }) {
                     <tr className="text-nowrap">
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3">
-                        <TextInput
-                          className="w-full"
-                          defaultValue={queryParams.nama}
-                          placeholder="Nama Menu"
-                          onBlur={(e) =>
-                            searchFieldChanged("nama", e.target.value)
-                          }
-                          onKeyPress={(e) => onKeyPress("nama", e)}
-                        />
-                      </th>
+                      <th className="px-3 py-3"></th>
                       <th className="px-3 py-3">
                         <SelectInput
                           className="w-full"
-                          defaultValue={queryParams.kategori}
+                          defaultValue={queryParams.status}
                           onChange={(e) =>
-                            searchFieldChanged("kategori", e.target.value)
+                            searchFieldChanged("status", e.target.value)
                           }
                         >
-                          <option value="">Select Kategori</option>
-                          <option value="makanan">Makanan</option>
-                          <option value="minuman">Minuman</option>
+                          <option value="">Select Status</option>
+                          <option value="pending">Pending</option>
+                          <option value="selesai">Selesai</option>
+                          <option value="cancel">Cancel</option>
                         </SelectInput>
                       </th>
-                      <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {menus.data.map((menu) => (
+                    {orders.data.map((order) => (
                       <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <td className="px-3 py-2">{menu.id}</td>
+                        <td className="px-3 py-2">{order.id}</td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {order.user_id}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {order.total_harga}
+                        </td>
                         <td className="px-3 py-2">
-                          <img src={menu.image} style={{ width: 60 }} />
-                        </td>
-                        <td className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
-                          {menu.nama}
+                          <span
+                            className={
+                              "px-2 py-1 rounded text-white " +
+                              ORDER_STATUS_CLASS_MAP[order.status]
+                            }
+                          >
+                            {ORDER_STATUS_TEXT_MAP[order.status]}
+                          </span>
                         </td>
                         <td className="px-3 py-2 text-nowrap">
-                          {menu.kategori}
-                        </td>
-                        <td className="px-3 py-2 text-nowrap">{menu.harga}</td>
-                        <td className="px-3 py-2 text-nowrap">
-                          {menu.deskripsi}
+                          {order.created_at}
                         </td>
                         <td className="px-3 py-2 text-nowrap">
                           <Link
-                            href={route("menu.edit", menu.id)}
+                            href={route("order.edit", order.id)}
                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                           >
                             Edit
                           </Link>
                           <button
-                            onClick={(e) => deleteProject(menu)}
+                            onClick={(e) => deleteProject(order)}
                             className="font-medium text-red-600 
                         dark:text-red-500 hover:underline mx-1"
                           >
@@ -161,7 +162,7 @@ export default function index({ menus, queryParams = null }) {
                   </tbody>
                 </table>
               </div>
-              <Pagination links={menus.meta.links} />
+              <Pagination links={orders.meta.links} />
             </div>
           </div>
         </div>
