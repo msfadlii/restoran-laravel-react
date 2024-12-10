@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     // });
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'))
         ->name('dashboard');
-
+    // Update - Rendy
     Route::resource('menu', MenuController::class);
     Route::resource('order', OrderController::class);
     Route::resource('transaksi', TransaksiController::class);
