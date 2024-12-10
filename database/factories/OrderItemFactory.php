@@ -22,7 +22,6 @@ class OrderItemFactory extends Factory
             'order_id' => Order::factory(),
             'menu_id' => $menu->id,
             'quantity' => $this->faker->numberBetween(1, 5),
-            'harga' => $menu->harga,
         ];
     }
 }

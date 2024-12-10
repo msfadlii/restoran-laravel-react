@@ -24,13 +24,13 @@ class DatabaseSeeder extends Seeder
             'username' => 'test',
         ]);
 
-         User::factory(20)->create();
+        User::factory(20)->create();
 
         Menu::factory(10)->create();
 
         Order::factory(5)->create()->each(function ($order) {
-            $items = OrderItem::factory(3)->create(['order_id' => $order->id]);
-            $order->update(['total_harga' => $items->sum(fn ($item) => $item->quantity * $item->harga)]);
+            $item = OrderItem::factory()->create(['order_id' => $order->id]);
+            $order->update(['total_harga' => $item->quantity * $item->menu->harga]);
             
             Transaksi::factory()->create([
                 'order_id' => $order->id,

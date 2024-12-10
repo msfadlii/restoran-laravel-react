@@ -38,7 +38,7 @@ class MenuController extends Controller
     }       
 
     public function store(Request $request)
-{
+    {
     // Validasi data
     $validatedData = $request->validate([
         'nama' => 'required|string|max:255',
@@ -55,9 +55,10 @@ class MenuController extends Controller
         // Jika tidak ada gambar, set image sebagai null
         $validatedData['image'] = null;
     }
+}
 
  
-    public function show(string $id)
+    public function show()
     {
         //
     }

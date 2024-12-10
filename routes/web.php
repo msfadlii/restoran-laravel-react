@@ -29,8 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::resource('menu', MenuController::class);
     Route::resource('order', OrderController::class);
     Route::resource('transaksi', TransaksiController::class);
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+    //Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    //Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
     
 });
 

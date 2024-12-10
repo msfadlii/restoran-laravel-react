@@ -19,7 +19,7 @@ return new class extends Migration
 
         // Tambahkan kolom status dengan enum yang baru
         Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'completed', 'cancel'])->default('pending');
+            $table->enum('status', ['pending', 'selesai', 'cancel'])->default('pending');
         });
     }
 

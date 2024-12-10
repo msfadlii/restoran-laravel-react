@@ -14,7 +14,7 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::query()->inRandomOrder()->value('id') ?? 1, // Pilih user ID acak atau fallback ke 1 jika tidak ada user
             'total_harga' => $this->faker->randomFloat(2, 0, 1000),
-            'status' => $this->faker->randomElement(['pending', 'completed', 'cancel']),
+            'status' => $this->faker->randomElement(['selesai', 'pending', 'cancel']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

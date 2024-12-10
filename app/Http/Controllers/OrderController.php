@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Controller;
@@ -19,11 +21,18 @@ class OrderController extends Controller
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 
+        if(request("status")){
+            $query->where("status", request("status"));
+        }
+
         $orders = $query->orderBy($sortField, $sortDirection)->paginate(10);
+
+        $orderItems = OrderItem::with('menu')->get();
 
         return inertia("Order/Index", [
             "orders" => OrderResource::collection($orders),
             "queryParams" => request()->query() ?: null,
+            "orderItems" => $orderItems,
         ]);
     }
 
@@ -39,10 +48,13 @@ class OrderController extends Controller
     }
 
    
-    public function show(string $id)
+    public function show($id)
     {
         $order = Order::with(['user', 'orderItems.menu'])->findOrFail($id);
-
+        
+        return Inertia::render('Order/Show', [
+            'order' => $order,
+        ]);
     }
     
     public function edit(string $id)

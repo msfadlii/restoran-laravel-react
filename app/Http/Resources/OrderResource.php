@@ -12,7 +12,7 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => new UserResource($this->user_id),
+            'user_id' => $this->user_id,
             'total_harga' => $this->total_harga,
             'status' => $this->status,
             'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),

@@ -23,14 +23,14 @@ export const MENU_CATEGORY_TEXT_MAP = {
 };
 export const ORDER_STATUS_CLASS_MAP = {
   pending: "bg-amber-500",
-  completed: "bg-green-500",
-  canceled: "bg-red-500",
-  processing: "bg-blue-500",
+  selesai: "bg-green-500",
+  cancel: "bg-red-500",
+  proses: "bg-blue-500",
 };
 
 export const ORDER_STATUS_TEXT_MAP = {
   pending: "Pending",
-  completed: "Completed",
-  canceled: "Canceled",
-  processing: "Processing",
+  selesai: "Selesai",
+  cancel: "Cancel",
+  proses: "Proses",
 };
