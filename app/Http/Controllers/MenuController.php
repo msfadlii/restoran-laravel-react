@@ -34,28 +34,36 @@ class MenuController extends Controller
 
     public function create()
     {
-        return inertia('Menu/CreateMenu');  // Pastikan ini mengarah ke komponen Inertia React yang benar
+        return inertia('Menu/CreateMenu');
     }       
 
     public function store(Request $request)
     {
-    // Validasi data
-    $validatedData = $request->validate([
-        'nama' => 'required|string|max:255',
-        'kategori' => 'required|string',
-        'harga' => 'required|numeric',
-        'deskripsi' => 'nullable|string',
-        'image' => 'nullable|image|max:2048', // Gambar opsional
-    ]);
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
 
-    // Jika ada file gambar, simpan gambar
-    if ($request->hasFile('image')) {
-        $validatedData['image'] = $request->file('image')->store('menu-images', 'public');
-    } else {
-        // Jika tidak ada gambar, set image sebagai null
-        $validatedData['image'] = null;
+        $menu = new Menu();
+        $menu->nama = $request->nama;
+        $menu->kategori = $request->kategori;
+        $menu->harga = $request->harga;
+        $menu->deskripsi = $request->deskripsi;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('menu-images', 'public');
+            $menu->image = $imagePath;
+        } else {
+            $menu->image = null;
+        }
+
+        $menu->save();
+
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan!');
     }
-}
 
  
     public function show()
@@ -77,12 +85,11 @@ class MenuController extends Controller
 
     
     public function destroy(string $id)
-{
-    $menu = Menu::findOrFail($id);
+    {
+        $menu = Menu::findOrFail($id);
 
-    
-    $menu->delete();
+        $menu->delete();
 
-    return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus!');
-}
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus!');
+    }
 }

@@ -66,6 +66,15 @@ export default function Index({ menus, queryParams = null }) {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
             <div className="p-6 text-gray-900 dark:text-gray-100">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Daftar Menu</h2>
+                <Link
+                  href={route("menu.create")}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Tambah Menu
+                </Link>
+              </div>
               <div className="overflow-auto">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
@@ -145,7 +154,15 @@ export default function Index({ menus, queryParams = null }) {
                       <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td className="px-3 py-2">{menu.id}</td>
                         <td className="px-3 py-2">
-                          <img src={menu.image} style={{ width: 60 }} />
+                          {menu.image ? (
+                            <img
+                              src={menu.image}
+                              alt={menu.nama}
+                              style={{ width: 60 }}
+                            />
+                          ) : (
+                            <span>Tidak Ada Gambar</span>
+                          )}
                         </td>
                         <td className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
                           {menu.nama}
@@ -177,9 +194,8 @@ export default function Index({ menus, queryParams = null }) {
                   </tbody>
                 </table>
               </div>
+              <Pagination links={menus.meta.links} />
             </div>
-
-            <Pagination links={menus.meta.links} />
           </div>
         </div>
       </div>
