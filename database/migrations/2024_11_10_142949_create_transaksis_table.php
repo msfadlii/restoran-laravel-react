@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
             $table->string('payment_method');
-            $table->timestamp('tgl_transaksi')->useCurrent();
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class TransaksiFactory extends Factory
             'order_id' => $order->id,
             'amount' => $order->total_harga,
             'payment_method' => $this->faker->randomElement(['cash', 'credit_card', 'bank_transfer']),
-            'tgl_transaksi' => $this->faker->dateTimeThisMonth,
+            
         ];
     }
 }
