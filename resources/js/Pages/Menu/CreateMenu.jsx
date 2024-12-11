@@ -35,9 +35,17 @@ export default function CreateMenu() {
   return (
     <AuthenticatedLayout
       header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-          Tambah Menu
-        </h2>
+        <div className="flex items-center space-x-2">
+          <Link
+            href={route("menu.index")}
+            className="text-lg text-gray-600 hover:text-white-800 dark:text-gray-200"
+          >
+            ←
+          </Link>
+          <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            Create Menu
+          </h2>
+        </div>
       }
     >
       <Head title="Tambah Menu" />
@@ -133,11 +141,10 @@ export default function CreateMenu() {
                       </div>
                     )}
                   </div>
-
-                  <div>
+                  <div className="mt-auto flex justify-end">
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                      className="py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                       disabled={processing}
                     >
                       {processing ? "Menyimpan..." : "Simpan Menu"}

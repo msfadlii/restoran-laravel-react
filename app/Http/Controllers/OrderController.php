@@ -28,6 +28,7 @@ class OrderController extends Controller
         $orders = $query->orderBy($sortField, $sortDirection)->paginate(10);
 
         $orderItems = OrderItem::with('menu')->get();
+        
 
         return inertia("Order/Index", [
             "orders" => OrderResource::collection($orders),
