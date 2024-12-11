@@ -34,7 +34,14 @@ class TransaksiController extends Controller
             "queryParams" => request()->query() ?: null,
         ]);
     }
-
+    public function show($id)
+    {
+         // Mengambil transaksi berdasarkan ID
+        $transaksi = Transaksi::with(['order', 'user'])->findOrFail($id);
+        return inertia('Transaksi/Show', [
+            'transaksi' => new TransaksiResource($transaksi),
+        ]);
+    }
 
     public function update(Request $request, $id)
     {

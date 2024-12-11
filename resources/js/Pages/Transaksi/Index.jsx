@@ -87,7 +87,7 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Total Harga
+                        
                       </TableHeading>
                       <TableHeading
                         name="created_at"
