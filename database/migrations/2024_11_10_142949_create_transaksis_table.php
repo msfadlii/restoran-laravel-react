@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
             $table->string('payment_method');
-            $table->timestamp('tgl_transaksi')->useCurrent();
             $table->timestamps();
         });
     }
