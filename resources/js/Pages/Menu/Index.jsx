@@ -4,6 +4,8 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useState } from "react";
 
@@ -64,6 +66,15 @@ export default function Index({ menus, queryParams = null }) {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
             <div className="p-6 text-gray-900 dark:text-gray-100">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Daftar Menu</h2>
+                <Link
+                  href={route("menu.create")}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Tambah Menu
+                </Link>
+              </div>
               <div className="overflow-auto">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
@@ -143,7 +154,15 @@ export default function Index({ menus, queryParams = null }) {
                       <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td className="px-3 py-2">{menu.id}</td>
                         <td className="px-3 py-2">
-                          <img src={menu.image} style={{ width: 60 }} />
+                          {menu.image ? (
+                            <img
+                              src={menu.image}
+                              alt={menu.nama}
+                              style={{ width: 60 }}
+                            />
+                          ) : (
+                            <span>Tidak Ada Gambar</span>
+                          )}
                         </td>
                         <td className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
                           {menu.nama}
@@ -175,60 +194,8 @@ export default function Index({ menus, queryParams = null }) {
                   </tbody>
                 </table>
               </div>
+              <Pagination links={menus.meta.links} />
             </div>
-            <div className="overflow-auto">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
-                  <tr>
-                    <th className="px-3 py-3">ID</th>
-                    <th className="px-3 py-3">Gambar</th>
-                    <th className="px-3 py-3">Nama</th>
-                    <th className="px-3 py-3">Kategori</th>
-                    <th className="px-3 py-3">Harga</th>
-                    <th className="px-3 py-3">Deskripsi</th>
-                    <th className="px-3 py-3 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {menus.data.map((menu) => (
-                    <tr
-                      key={menu.id}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    >
-                      <td className="px-3 py-2">{menu.id}</td>
-                      <td className="px-3 py-2">
-                        <img
-                          src={menu.image}
-                          alt={menu.nama}
-                          style={{ width: 60 }}
-                        />
-                      </td>
-                      <td className="px-3 py-2 text-nowrap">{menu.nama}</td>
-                      <td className="px-3 py-2">{menu.kategori}</td>
-                      <td className="px-3 py-2">{menu.harga}</td>
-                      <td className="px-3 py-2 text-nowrap">
-                        {menu.deskripsi}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        <button
-                          onClick={() => openModal(menu)}
-                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={(handleDeleteMenu) => deleteMenu(menu)}
-                          className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <Pagination links={menus.meta.links} />
           </div>
         </div>
       </div>

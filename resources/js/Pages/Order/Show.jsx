@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import React from "react";
+import { Link } from "@inertiajs/react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 export default function Show({ order }) {
   return (
@@ -30,7 +30,9 @@ export default function Show({ order }) {
                 </p>
               </div>
               <div className="mt-6">
-                <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Items</h3>
+                <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                  Items
+                </h3>
                 <table className="w-full mt-2 text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -47,7 +49,7 @@ export default function Show({ order }) {
                       >
                         <td className="px-3 py-2">{item.menu.nama}</td>
                         <td className="px-3 py-2">{item.quantity}</td>
-                        <td className="px-3 py-2">Rp {item.harga}</td>
+                        <td className="px-3 py-2">Rp {item.menu.harga}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -57,7 +59,7 @@ export default function Show({ order }) {
               {/* Edit Button to navigate to the Edit Page */}
               <div className="mt-6">
                 <Link
-                  href={`/order/${order.id}/edit`}  // Assuming you have a route to edit the order
+                  href={`/order/${order.id}/edit`} // Assuming you have a route to edit the order
                   className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
                 >
                   Edit Pesanan

@@ -15,7 +15,7 @@ class MenuResource extends JsonResource
             'kategori' => $this->kategori,
             'harga' => $this->harga,
             'deskripsi' => $this->deskripsi,
-            'image' => $this->image,
+            'image' => $this->image ? asset('storage/' . $this->image) : null,
         ];
     }
 }
