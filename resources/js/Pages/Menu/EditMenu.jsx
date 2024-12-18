@@ -97,18 +97,18 @@ export default function EditMenu({ menu, kategori }) {
                     Kategori
                   </label>
                   <SelectInput
-                    name="kategori_id"
-                    value={data.kategori_id}
+                    name="kategori"
+                    value={data.kategori}
                     onChange={handleChange}
-                    error={errors.kategori_id}
+                    error={errors.kategori}
                     className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-300"
                   >
                     <option value="">Pilih Kategori</option>
-                    {kategori.map((kat) => {
-                      <option key="{kat.id}" value={kat.id}>
+                    {kategori.map((kat) => (
+                      <option key={kat.id} value={kat.id}>
                         {kat.nama}
-                      </option>;
-                    })}
+                      </option>
+                    ))}
                   </SelectInput>
                 </div>
                 <div>

@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { useForm, Head, Link, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import SelectInput from "@/Components/SelectInput";
 
-export default function CreateMenu() {
+export default function CreateMenu({ kategori }) {
   const { data, setData, post, processing, errors } = useForm({
     nama: "",
     kategori: "",
@@ -18,7 +17,6 @@ export default function CreateMenu() {
     setData(name, value);
   };
 
-  // Handle image file change
   const handleFileChange = (e) => {
     setData("image", e.target.files[0]);
   };
@@ -55,6 +53,7 @@ export default function CreateMenu() {
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <form onSubmit={handleSubmit}>
                 <div className="space-y-6">
+                  {/* Nama Menu */}
                   <div>
                     <label
                       htmlFor="nama"
@@ -71,6 +70,7 @@ export default function CreateMenu() {
                     />
                   </div>
 
+                  {/* Kategori */}
                   <div>
                     <label
                       htmlFor="kategori"
@@ -86,11 +86,15 @@ export default function CreateMenu() {
                       className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-300"
                     >
                       <option value="">Pilih Kategori</option>
-                      <option value="makanan">Makanan</option>
-                      <option value="minuman">Minuman</option>
+                      {kategori.map((kat) => (
+                        <option key={kat.id} value={kat.id}>
+                          {kat.nama}
+                        </option>
+                      ))}
                     </SelectInput>
                   </div>
 
+                  {/* Harga */}
                   <div>
                     <label
                       htmlFor="harga"
@@ -108,6 +112,7 @@ export default function CreateMenu() {
                     />
                   </div>
 
+                  {/* Deskripsi */}
                   <div>
                     <label
                       htmlFor="deskripsi"
@@ -124,6 +129,7 @@ export default function CreateMenu() {
                     />
                   </div>
 
+                  {/* Gambar */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Gambar
@@ -141,6 +147,8 @@ export default function CreateMenu() {
                       </div>
                     )}
                   </div>
+
+                  {/* Tombol Submit */}
                   <div className="mt-auto flex justify-end">
                     <button
                       type="submit"

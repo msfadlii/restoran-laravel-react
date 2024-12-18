@@ -40,7 +40,11 @@ class MenuController extends Controller
 
     public function create()
     {
-        return inertia('Menu/CreateMenu');
+        $kategori = Kategori::all();
+
+        return inertia("Menu/CreateMenu", [
+            "kategori" => $kategori
+        ]);
     }       
 
     public function store(Request $request)
