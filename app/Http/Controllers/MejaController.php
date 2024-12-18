@@ -15,21 +15,20 @@ class MejaController extends Controller
         
         $query = Meja::query();
 
-        // Sorting field dan direction dengan nilai default
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 
-        // Filter berdasarkan status meja jika ada
+       
         if (request("status")) {
             $query->whereHas('statusMeja', function ($q) {
                 $q->where('status', request("status"));
             });
         }
 
-        // Ambil data meja dengan relasi dan sorting
+       
         $mejas = $query->with('statusMeja')->orderBy($sortField, $sortDirection)->paginate(10);
 
-        // Return data ke frontend
+     
         return inertia("Meja/Index", [
             "mejas" => MejaResource::collection($mejas),
             "queryParams" => request()->query() ?: null,
@@ -37,7 +36,7 @@ class MejaController extends Controller
     }
         public function create()
     {
-        // Ambil semua status dari tabel statuses
+        
         $statuses = StatusMeja::all();
 
         return inertia('Meja/Create', [
@@ -88,13 +87,13 @@ class MejaController extends Controller
     }
         public function destroy($id)
     {
-        // Mencari meja berdasarkan ID
+      
         $meja = Meja::findOrFail($id);
 
-        // Menghapus meja
+       
         $meja->delete();
 
-        // Mengarahkan kembali ke halaman daftar meja dengan pesan sukses
+       
         return redirect()->route('meja.index')->with('success', 'Meja berhasil dihapus.');
     }
 
