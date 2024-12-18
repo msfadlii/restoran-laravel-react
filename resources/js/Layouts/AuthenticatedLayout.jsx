@@ -49,6 +49,12 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                   Transaksi
                 </NavLink>
+                <NavLink
+                  href={route("meja.index")}
+                  active={route().current("meja.index")}
+                >
+                  Meja
+                </NavLink>
               </div>
             </div>
 
