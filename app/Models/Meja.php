@@ -9,7 +9,7 @@ class Meja extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nomor_meja', 'status_meja_id'];
+    protected $fillable = ['no_meja', 'status_meja_id'];
 
     public function statusMeja()
     {
