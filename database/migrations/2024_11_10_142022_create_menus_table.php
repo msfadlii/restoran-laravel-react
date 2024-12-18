@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('kategori');
+            $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
             $table->decimal('harga', 8, 2);
             $table->text('deskripsi')->nullable();
             $table->string('image')->nullable();

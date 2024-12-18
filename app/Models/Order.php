@@ -14,6 +14,7 @@ class Order extends Model
         'user_id',
         'total_harga',
         'status',
+        'meja_id'
     ];
 
     public function user()
@@ -29,5 +30,10 @@ class Order extends Model
     public function transaksi()
     {
         return $this->hasOne(Transaksi::class);
+    }
+    
+    public function meja()
+    {
+        return $this->belongsTo(Meja::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Kategori;
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,7 +17,7 @@ class MenuFactory extends Factory
     {
         return [
             'nama' => $this->faker->word,
-            'kategori' => $this->faker->randomElement(['makanan', 'minuman']),
+            'kategori_id' => Kategori::inRandomOrder()->first()->id,
             'harga' => $this->faker->randomFloat(2, 10000, 50000),
             'deskripsi' => $this->faker->sentence,
             'image' => $this->faker->imageUrl(640, 480, 'food', true),
