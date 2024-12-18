@@ -9,6 +9,7 @@ use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StatusMeja;
+use App\Models\StatusOrder;
 use App\Models\Transaksi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -55,6 +56,12 @@ class DatabaseSeeder extends Seeder
 
         foreach ($mejas as $meja) {
             Meja::create($meja);
+        }
+
+        $statusOrder = ['Selesai', 'Cancel', 'Pending'];
+
+        foreach ($statusOrder as $status) {
+            StatusOrder::create(['status' => $status]);
         }
 
         Menu::factory(10)->create();

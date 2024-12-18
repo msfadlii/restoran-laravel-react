@@ -21,8 +21,7 @@ class TransaksiResource extends JsonResource
             'amount' => $this->amount,
             'payment_method' => $this->payment_method,
             'created_at' => Carbon::parse($this->created_at)->format('d-m-Y H:i:s'),
-            // Menambahkan nama pengguna dari relasi order
-            'user_name' => $this->user->name,
+            'user_name' => $this->order && $this->order->user ? $this->order->user->name : 'Tidak Dikenal',
         ];
     }
 }

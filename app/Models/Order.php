@@ -13,7 +13,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'total_harga',
-        'status',
+        'status_order_id',
         'meja_id'
     ];
 
@@ -35,5 +35,10 @@ class Order extends Model
     public function meja()
     {
         return $this->belongsTo(Meja::class);
+    }
+
+    public function statusOrder()
+    {
+        return $this->belongsTo(StatusOrder::class, 'status_order_id');
     }
 }

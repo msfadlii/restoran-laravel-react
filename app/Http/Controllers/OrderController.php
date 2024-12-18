@@ -8,6 +8,7 @@ use App\Models\Meja;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
 use App\Models\Menu;
+use App\Models\StatusOrder;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -16,15 +17,18 @@ class OrderController extends Controller
     public function index()
     {
         $query = Order::query();
+        $statusOrders = StatusOrder::all();
 
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 
         if (request("status")) {
-            $query->where("status", request("status"));
+            $query->whereHas('statusOrder', function($query) {
+                $query->where('status', request("status"));
+            });
         }
 
-        $orders = $query->with('meja')->orderBy($sortField, $sortDirection)->paginate(10);
+        $orders = $query->with(['meja', 'statusOrder'])->orderBy($sortField, $sortDirection)->paginate(10);
 
         $orderItems = OrderItem::with('menu')->get();
 
@@ -32,6 +36,7 @@ class OrderController extends Controller
             "orders" => OrderResource::collection($orders),
             "queryParams" => request()->query() ?: null,
             "orderItems" => $orderItems,
+            "statusOrders" => $statusOrders,
         ]);
     }
 
@@ -51,6 +56,7 @@ class OrderController extends Controller
             'menu_items' => 'required|array',
             'menu_items.*.menu_id' => 'required|exists:menus,id',
             'menu_items.*.quantity' => 'required|integer|min:1',
+            'status_order_id' => 'required|exists:status_order,id', // Validasi untuk status
         ]);
 
         $totalHarga = 0;
@@ -64,7 +70,7 @@ class OrderController extends Controller
             'user_id' => $request->user_id,
             'meja_id' => $request->meja_id,
             'total_harga' => $totalHarga,
-            'status' => 'pending',
+            'status_order_id' => $request->status_order_id, // Simpan status_id di sini
         ]);
 
         foreach ($request->menu_items as $item) {
@@ -78,9 +84,10 @@ class OrderController extends Controller
         return redirect()->route('order.index')->with('success', 'Order berhasil dibuat.');
     }
 
+
     public function show($id)
     {
-        $order = Order::with(['user', 'orderItems.menu', 'meja'])->findOrFail($id);
+        $order = Order::with(['user', 'orderItems.menu', 'meja', 'statusOrder'])->findOrFail($id);
 
         return Inertia::render('Order/Show', [
             'order' => $order,
@@ -89,7 +96,8 @@ class OrderController extends Controller
 
     public function edit(string $id)
     {
-        $order = Order::with(['orderItems', 'meja'])->findOrFail($id);
+        $order = Order::with(['orderItems', 'meja', 'statusOrder'])->findOrFail($id); 
+
         $mejaList = Meja::all();
         $menu = Menu::all();
 
@@ -100,13 +108,11 @@ class OrderController extends Controller
         ]);
     }
 
+
     public function update(Request $request, string $id)
     {
-        Log::info('Received data:', $request->all());
-
-        // Validasi data
         $request->validate([
-            'status' => 'required|string',
+            'status_order_id' => 'required|exists:status_order,id', // Validasi untuk status
             'meja_id' => 'required|exists:mejas,id',
             'menu_items' => 'required|array',
             'menu_items.*.menu_id' => 'required|exists:menus,id',
@@ -132,19 +138,18 @@ class OrderController extends Controller
                 ]);
             }
 
-            // Hitung harga total dari semua item
             $newTotalPrice += $item['price'] * $item['quantity'];
         }
 
-        // Perbarui total harga, meja_id, dan status di order
         $order->update([
             'total_harga' => $newTotalPrice,
-            'status' => $request->status,
+            'status_order_id' => $request->status_order_id, // Perbarui status_order_id
             'meja_id' => $request->meja_id,
         ]);
 
         return redirect()->route('order.show', $order->id)->with('success', 'Order berhasil diperbarui.');
     }
+
 
     public function destroy(string $id)
     {

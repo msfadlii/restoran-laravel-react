@@ -13,14 +13,14 @@ return new class extends Migration
     public function up(): void
     {
         // Hapus kolom status yang lama
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        // Schema::table('orders', function (Blueprint $table) {
+        //     $table->dropColumn('status');
+        // });
 
-        // Tambahkan kolom status dengan enum yang baru
-        Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'selesai', 'cancel'])->default('pending');
-        });
+        // // Tambahkan kolom status dengan enum yang baru
+        // Schema::table('orders', function (Blueprint $table) {
+        //     $table->enum('status', ['pending', 'selesai', 'cancel'])->default('pending');
+        // });
     }
 
     /**
