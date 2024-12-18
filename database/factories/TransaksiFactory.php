@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Transaksi;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,12 +17,13 @@ class TransaksiFactory extends Factory
     public function definition(): array
     {
         $order = Order::factory()->create();
+        $user = User::inRandomOrder()->first();
 
         return [
             'order_id' => $order->id,
-            'amount' => $order->total_harga,
+            'user_id' => $user->id,
+            'amount' => $this->faker->numberBetween(150000, 300000), // Angka acak antara 1.500.000 hingga 3.000.000
             'payment_method' => $this->faker->randomElement(['cash', 'credit_card', 'bank_transfer']),
-            'tgl_transaksi' => $this->faker->dateTimeThisMonth,
         ];
     }
 }

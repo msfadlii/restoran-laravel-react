@@ -47,24 +47,24 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
     router.get(route("menu.index"), queryParams);
   };
 
-  const onKeyPress = (nama, e) => {
-    if (e.key !== "Enter") return;
-    searchFieldChanged(nama, e.target.value);
-  };
+    const onKeyPress = (nama, e) => {
+      if (e.key !== "Enter") return;
+      searchFieldChanged(nama, e.target.value);
+    };
 
-  const sortChanged = (nama) => {
-    if (nama === queryParams.sort_field) {
-      if (queryParams.sort_direction === "asc") {
-        queryParams.sort_direction = "desc";
+    const sortChanged = (nama) => {
+      if (nama === queryParams.sort_field) {
+        if (queryParams.sort_direction === "asc") {
+          queryParams.sort_direction = "desc";
+        } else {
+          queryParams.sort_direction = "asc";
+        }
       } else {
+        queryParams.sort_field = nama;
         queryParams.sort_direction = "asc";
       }
-    } else {
-      queryParams.sort_field = nama;
-      queryParams.sort_direction = "asc";
-    }
-    router.get(route("menu.index"), queryParams);
-  };
+      router.get(route("menu.index"), queryParams);
+    };
 
   const handleDelete = (e) => {
     e.preventDefault(); // Mencegah link melakukan aksi default
@@ -237,11 +237,54 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
                           </Link>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {menus.data.map((menu) => (
+                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                          <td className="px-3 py-2">{menu.id}</td>
+                          <td className="px-3 py-2">
+                            {menu.image ? (
+                              <img
+                                src={menu.image}
+                                alt={menu.nama}
+                                style={{ width: 60 }}
+                              />
+                            ) : (
+                              <span>Tidak Ada Gambar</span>
+                            )}
+                          </td>
+                          <td className="px-3 py-2 text-gray-100 text-nowrap hover:underline">
+                            {menu.nama}
+                          </td>
+                          <td className="px-3 py-2 text-nowrap">
+                            {menu.kategori}
+                          </td>
+                          <td className="px-3 py-2 text-nowrap">{menu.harga}</td>
+                          <td className="px-3 py-2 text-nowrap">
+                            {menu.deskripsi}
+                          </td>
+                          <td className="px-3 py-2 text-nowrap">
+                            <Link
+                              href={route("menu.edit", menu.id)}
+                              className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              onClick={(e) => deleteProject(menu)}
+                              className="font-medium text-red-600 
+                          dark:text-red-500 hover:underline mx-1"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <Pagination links={menus.meta.links} />
               </div>
-              <Pagination links={menus.meta.links} />
             </div>
           </div>
         </div>
