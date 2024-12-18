@@ -12,7 +12,7 @@ class MejaController extends Controller
 {
     public function index()
     {
-        // Inisialisasi query
+        
         $query = Meja::query();
 
         // Sorting field dan direction dengan nilai default
