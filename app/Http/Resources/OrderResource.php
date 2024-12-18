@@ -15,7 +15,7 @@ class OrderResource extends JsonResource
             'user_id' => $this->user_id,
             'meja' => $this->meja ? $this->meja->no_meja : null,
             'total_harga' => $this->total_harga,
-            'status' => $this->status,
+            'status' => $this->statusOrder->status,
             'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
         ];
     }

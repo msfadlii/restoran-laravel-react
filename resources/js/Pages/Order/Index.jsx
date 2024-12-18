@@ -6,7 +6,12 @@ import TableHeading from "@/Components/TableHeading";
 import { ORDER_STATUS_CLASS_MAP, ORDER_STATUS_TEXT_MAP } from "@/constants";
 import { useState } from "react";
 //hehhee
-export default function index({ orders, orderItems, queryParams = null }) {
+export default function index({
+  orders,
+  orderItems,
+  statusOrders,
+  queryParams = null,
+}) {
   queryParams = queryParams || {};
 
   const searchFieldChanged = (nama, value) => {
@@ -133,9 +138,11 @@ export default function index({ orders, orderItems, queryParams = null }) {
                           }
                         >
                           <option value="">Select Status</option>
-                          <option value="pending">Pending</option>
-                          <option value="selesai">Selesai</option>
-                          <option value="cancel">Cancel</option>
+                          {statusOrders.map((status) => (
+                            <option key={status.id} value={status.status}>
+                              {status.status}
+                            </option>
+                          ))}
                         </SelectInput>
                       </th>
                       <th className="px-3 py-3"></th>
@@ -160,16 +167,7 @@ export default function index({ orders, orderItems, queryParams = null }) {
                           <td className="px-3 py-2 text-nowrap">
                             {order.total_harga}
                           </td>
-                          <td className="px-3 py-2">
-                            <span
-                              className={
-                                "px-2 py-1 rounded text-white " +
-                                ORDER_STATUS_CLASS_MAP[order.status]
-                              }
-                            >
-                              {ORDER_STATUS_TEXT_MAP[order.status]}
-                            </span>
-                          </td>
+                          <td className="px-3 py-2">{order.status}</td>
                           <td className="px-3 py-2 text-nowrap">
                             {order.created_at}
                           </td>
@@ -193,8 +191,7 @@ export default function index({ orders, orderItems, queryParams = null }) {
                                 e.stopPropagation();
                                 deleteProject(order);
                               }}
-                              className="font-medium text-red-600 
-                        dark:text-red-500 hover:underline mx-1"
+                              className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                             >
                               Delete
                             </button>

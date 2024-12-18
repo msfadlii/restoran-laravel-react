@@ -6,17 +6,21 @@ use App\Http\Resources\TransaksiResource;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
+namespace App\Http\Controllers;
+
+use App\Http\Resources\TransaksiResource;
+use App\Models\Transaksi;
+use Illuminate\Http\Request;
+
 class TransaksiController extends Controller
 {
     public function index()
     {
         $query = Transaksi::query();
 
-        // Sorting berdasarkan field tertentu
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 
-        // Filter berdasarkan metode pembayaran dan tanggal transaksi
         if (request("payment_method")) {
             $query->where("payment_method", "like", "%" . request("payment_method") . "%");
         }
@@ -25,21 +29,22 @@ class TransaksiController extends Controller
             $query->whereDate("tgl_transaksi", request("tgl_transaksi"));
         }
 
-        // Pagination
-        $transaksis = $query->orderBy($sortField, $sortDirection)->paginate(10);
+        $transaksis = $query->with(['order.user'])  
+                            ->orderBy($sortField, $sortDirection)
+                            ->paginate(10);
 
-        // Mengembalikan data ke Inertia.js
         return inertia("Transaksi/Index", [
             "transaksis" => TransaksiResource::collection($transaksis),
             "queryParams" => request()->query() ?: null,
         ]);
     }
+
     public function show($id)
     {
-         // Mengambil transaksi berdasarkan ID
-        $transaksi = Transaksi::with(['order', 'user'])->findOrFail($id);
+        $transaksi = Transaksi::with(['order.user'])->findOrFail($id);
+
         return inertia('Transaksi/Show', [
-            'transaksi' => new TransaksiResource($transaksi),
+            'transaksi' => $transaksi,
         ]);
     }
 

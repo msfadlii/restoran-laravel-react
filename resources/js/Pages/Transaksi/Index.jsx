@@ -1,14 +1,13 @@
+import React, { useState } from "react";
+import { Head, Link } from "@inertiajs/react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Pagination from "@/Components/Pagination";
 import SelectInput from "@/Components/SelectInput";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
-import { useState } from "react";
 
 export default function TransaksiIndex({ transaksis, queryParams = null }) {
   queryParams = queryParams || {};
 
-  // Fungsi untuk menangani perubahan filter
   const searchFieldChanged = (nama, value) => {
     if (value) {
       queryParams[nama] = value;
@@ -26,7 +25,8 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
 
   const sortChanged = (nama) => {
     if (nama === queryParams.sort_field) {
-      queryParams.sort_direction = queryParams.sort_direction === "asc" ? "desc" : "asc";
+      queryParams.sort_direction =
+        queryParams.sort_direction === "asc" ? "desc" : "asc";
     } else {
       queryParams.sort_field = nama;
       queryParams.sort_direction = "desc";
@@ -38,6 +38,20 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
 
   const toggleRow = (id) => {
     setSelectedRow(selectedRow === id ? null : id);
+  };
+
+  // Fungsi untuk mengubah nilai payment_method
+  const formatPaymentMethod = (method) => {
+    switch (method) {
+      case "credit_card":
+        return "Credit Card";
+      case "bank_transfer":
+        return "Bank Transfer";
+      case "cash":
+        return "Cash";
+      default:
+        return method;
+    }
   };
 
   return (
@@ -71,7 +85,7 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                       Order ID
+                        Order ID
                       </TableHeading>
                       <TableHeading
                         name="payment_method"
@@ -87,7 +101,7 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        
+                        Total Harga
                       </TableHeading>
                       <TableHeading
                         name="created_at"
@@ -104,11 +118,9 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                     <tr className="text-nowrap">
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3"></th>
                       <th className="px-3 py-3">
                         <SelectInput
-                          className="w-full"
+                          className="w-70"
                           defaultValue={queryParams.payment_method || ""}
                           onChange={(e) =>
                             searchFieldChanged("payment_method", e.target.value)
@@ -119,6 +131,9 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                           <option value="bank_transfer">Bank Transfer</option>
                         </SelectInput>
                       </th>
+                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -129,10 +144,18 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                         onClick={() => toggleRow(transaksi.id)}
                       >
                         <td className="px-3 py-2">{transaksi.id}</td>
-                        <td className="px-3 py-2 text-nowrap">{transaksi.order_id}</td>
-                        <td className="px-3 py-2 text-nowrap">{transaksi.payment_method}</td>
-                        <td className="px-3 py-2 text-nowrap">Rp. {transaksi.amount}</td>
-                        <td className="px-3 py-2 text-nowrap">{transaksi.created_at}</td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {transaksi.order_id}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {formatPaymentMethod(transaksi.payment_method)}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">
+                          Rp. {transaksi.amount}
+                        </td>
+                        <td className="px-3 py-2 text-nowrap">
+                          {transaksi.created_at}
+                        </td>
                         <td className="px-3 py-2 text-nowrap">
                           <Link
                             href={route("transaksi.show", transaksi.id)}
