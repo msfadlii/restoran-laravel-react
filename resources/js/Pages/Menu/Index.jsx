@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 
-export default function Index({ menus, queryParams = null, flash }) {
+export default function Index({ menus, kategori, queryParams = null, flash }) {
   useEffect(() => {
     if (flash?.success) {
       toast.success(flash.success, {
@@ -183,8 +183,11 @@ export default function Index({ menus, queryParams = null, flash }) {
                           }
                         >
                           <option value="">Select Kategori</option>
-                          <option value="makanan">Makanan</option>
-                          <option value="minuman">Minuman</option>
+                          {kategori.map((kat) => (
+                            <option key={kat.id} value={kat.nama}>
+                              {kat.nama}
+                            </option>
+                          ))}
                         </SelectInput>
                       </th>
                       <th className="px-3 py-3"></th>
@@ -211,7 +214,7 @@ export default function Index({ menus, queryParams = null, flash }) {
                           {menu.nama}
                         </td>
                         <td className="px-3 py-2 text-nowrap">
-                          {menu.kategori}
+                          {menu.kategori.nama}
                         </td>
                         <td className="px-3 py-2 text-nowrap">{menu.harga}</td>
                         <td className="px-3 py-2 text-nowrap">

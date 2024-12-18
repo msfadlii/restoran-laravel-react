@@ -4,7 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import SelectInput from "@/Components/SelectInput";
 
-export default function EditMenu({ menu }) {
+export default function EditMenu({ menu, kategori }) {
   const { data, setData, put, processing, errors } = useForm({
     nama: menu?.nama || "",
     kategori: menu?.kategori || "",
@@ -97,15 +97,18 @@ export default function EditMenu({ menu }) {
                     Kategori
                   </label>
                   <SelectInput
-                    name="kategori"
-                    value={data.kategori}
+                    name="kategori_id"
+                    value={data.kategori_id}
                     onChange={handleChange}
-                    error={errors.kategori}
+                    error={errors.kategori_id}
                     className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-300"
                   >
                     <option value="">Pilih Kategori</option>
-                    <option value="makanan">Makanan</option>
-                    <option value="minuman">Minuman</option>
+                    {kategori.map((kat) => {
+                      <option key="{kat.id}" value={kat.id}>
+                        {kat.nama}
+                      </option>;
+                    })}
                   </SelectInput>
                 </div>
                 <div>

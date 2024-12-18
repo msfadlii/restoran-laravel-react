@@ -6,9 +6,17 @@ export default function Show({ order }) {
   return (
     <AuthenticatedLayout
       header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-          Detail Pesanan #{order.id}
-        </h2>
+        <div className="flex items-center space-x-2">
+          <Link
+            href={route("order.index")}
+            className="text-lg text-gray-600 hover:text-white-800 dark:text-gray-200"
+          >
+            ←
+          </Link>
+          <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            Detail Order
+          </h2>
+        </div>
       }
     >
       <div className="py-12">
@@ -16,7 +24,7 @@ export default function Show({ order }) {
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
             <div className="p-6">
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Detail Pesanan
+                Detail Order #{order.id}
               </h2>
               <div className="mt-4">
                 <p className="text-sm text-gray-600 dark:text-gray-400">

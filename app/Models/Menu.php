@@ -12,7 +12,7 @@ class Menu extends Model
 
     protected $fillable = [
         'nama',
-        'kategori',
+        'kategori_id',
         'harga',
         'deskripsi',
         'image',
@@ -21,5 +21,10 @@ class Menu extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 }

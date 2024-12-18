@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import React, { useState } from "react";
+import { useForm, Link } from "@inertiajs/react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function Edit({ order, menus }) {
+export default function Edit({ order, menus, mejaList }) {
   const { data, setData, put } = useForm({
-    status: order.status || '',
+    status: order.status || "",
+    meja_id: order.meja_id || "",
     menu_items: order.menu_items || [],
     total_price: order.total_price || 0, // Harga total awal
   });
@@ -30,22 +31,18 @@ export default function Edit({ order, menus }) {
         total: menu.harga * menuQuantity,
       };
 
-      // Update data menu_items
-      setData('menu_items', [...data.menu_items, newMenuItem]);
+      setData("menu_items", [...data.menu_items, newMenuItem]);
 
-      // Reset input
-      setSelectedMenu('');
+      setSelectedMenu("");
       setMenuQuantity(1);
     }
   };
 
-  // Menghapus item menu
   const removeMenuItem = (index) => {
     const menuItems = [...data.menu_items];
     menuItems.splice(index, 1);
 
-    // Update menu_items
-    setData('menu_items', menuItems);
+    setData("menu_items", menuItems);
   };
 
   // Menangani pengiriman form untuk memperbarui pesanan
@@ -54,26 +51,32 @@ export default function Edit({ order, menus }) {
 
     const total = data.menu_items.reduce((sum, item) => sum + item.total, 0);
 
-    await put(route('order.update', order.id), {
-        status: data.status,
-        menu_items: data.menu_items.map(item => ({
-            menu_id: item.menu_id,
-            quantity: item.quantity,
-            price: item.price,
-        })),
-        total_price: total,
+    await put(route("order.update", order.id), {
+      status: data.status,
+      meja_id: data.meja_id,
+      menu_items: data.menu_items.map((item) => ({
+        menu_id: item.menu_id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      total_price: total,
     });
-};
-
-
-
+  };
 
   return (
     <AuthenticatedLayout
       header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-          Edit Order
-        </h2>
+        <div className="flex items-center space-x-2">
+          <Link
+            href={route("order.index")}
+            className="text-lg text-gray-600 hover:text-white-800 dark:text-gray-200"
+          >
+            ←
+          </Link>
+          <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            Edit Order
+          </h2>
+        </div>
       }
     >
       <div className="py-12">
@@ -81,16 +84,39 @@ export default function Edit({ order, menus }) {
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
             <div className="p-6">
               <form onSubmit={handleSubmit}>
-                {/* Status Selection */}
                 <div className="mb-4">
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label
+                    htmlFor="meja"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    Pilih Meja
+                  </label>
+                  <select
+                    id="meja"
+                    value={data.meja_id}
+                    onChange={(e) => setData("meja_id", e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 dark:bg-gray-700 dark:text-gray-200"
+                  >
+                    <option value="">Pilih Meja</option>
+                    {mejaList.map((meja) => (
+                      <option key={meja.id} value={meja.id}>
+                        {meja.no_meja}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="status"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
                     Status
                   </label>
                   <select
                     id="status"
                     name="status"
                     value={data.status}
-                    onChange={(e) => setData('status', e.target.value)}
+                    onChange={(e) => setData("status", e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 dark:bg-gray-700 dark:text-gray-200"
                   >
                     <option value="pending">Pending</option>
@@ -99,9 +125,11 @@ export default function Edit({ order, menus }) {
                   </select>
                 </div>
 
-                {/* Menu Item Selection */}
                 <div className="mb-4">
-                  <label htmlFor="menu" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label
+                    htmlFor="menu"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
                     Add Menu Item
                   </label>
                   <div className="flex items-center space-x-2">
@@ -137,12 +165,18 @@ export default function Edit({ order, menus }) {
 
                 {/* List Added Menu Items */}
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">Added Items</h3>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Added Items
+                  </h3>
                   <ul className="mt-2">
                     {data.menu_items.map((item, index) => (
-                      <li key={index} className="flex justify-between mb-2 text text-white">
+                      <li
+                        key={index}
+                        className="flex justify-between mb-2 text text-white"
+                      >
                         <span>
-                          {item.name} - {item.quantity} x Rp{item.price} = Rp{item.total}
+                          {item.name} - {item.quantity} x Rp{item.price} = Rp
+                          {item.total}
                         </span>
                         <button
                           type="button"
@@ -159,13 +193,17 @@ export default function Edit({ order, menus }) {
                 {/* Total Price */}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    Total Price: Rp{data.menu_items.reduce((sum, item) => sum + item.total, 0)}
+                    Total Price: Rp
+                    {data.menu_items.reduce((sum, item) => sum + item.total, 0)}
                   </label>
                 </div>
 
                 {/* Submit Button */}
                 <div className="flex justify-end">
-                  <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                  >
                     Update Order
                   </button>
                 </div>

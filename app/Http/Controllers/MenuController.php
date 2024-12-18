@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Http\Requests\StoreMenuRequest;
 use App\Http\Requests\UpdateMenuRequest;
 use App\Http\Resources\MenuResource;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
@@ -14,6 +15,7 @@ class MenuController extends Controller
     public function index()
     {
         $query = Menu::query();
+        $kategori = Kategori::all();
 
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
@@ -21,8 +23,10 @@ class MenuController extends Controller
         if(request("nama")){
             $query->where("nama", "like", "%". request("nama") ."%");
         }
-        if(request("kategori")){
-            $query->where("kategori", request("kategori"));
+        if (request("kategori")) {
+            $query->whereHas('kategori', function ($q) {
+                $q->where('nama', request('kategori'));
+            });
         }
 
         $menus = $query->orderBy($sortField, $sortDirection)->paginate(10);
@@ -30,6 +34,7 @@ class MenuController extends Controller
         return inertia("Menu/Index", [
             "menus" => MenuResource::collection($menus),
             "queryParams" => request()->query() ?: null,
+            "kategori" => $kategori
         ]);
     }
 
@@ -42,7 +47,7 @@ class MenuController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'kategori' => 'required|string',
+            'kategori_id' => 'required|exists:kategoris,id',
             'harga' => 'required|numeric',
             'deskripsi' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
@@ -50,7 +55,7 @@ class MenuController extends Controller
 
         $menu = new Menu();
         $menu->nama = $request->nama;
-        $menu->kategori = $request->kategori;
+        $menu->kategori_id = $request->kategori_id;
         $menu->harga = $request->harga;
         $menu->deskripsi = $request->deskripsi;
 
@@ -76,9 +81,12 @@ class MenuController extends Controller
     public function edit(string $id)
     {
         $menu = Menu::findOrFail($id);
+        $kategori = Kategori::all();
+
 
         return inertia('Menu/EditMenu', [
-            'menu' => $menu
+            'menu' => $menu,
+            'kategori' => $kategori
         ]);
     }
 
@@ -87,7 +95,7 @@ class MenuController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'kategori' => 'required|string|max:255',
+            'kategori_id' => 'required|exists:kategoris,id',
             'harga' => 'required|numeric',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -100,7 +108,7 @@ class MenuController extends Controller
         }
 
         $menu->nama = $validatedData['nama'];
-        $menu->kategori = $validatedData['kategori'];
+        $menu->kategori_id = $validatedData['kategori_id'];
         $menu->harga = $validatedData['harga'];
         $menu->deskripsi = $validatedData['deskripsi'] ?? $menu->deskripsi;
 

@@ -84,6 +84,14 @@ export default function index({ orders, orderItems, queryParams = null }) {
                         User ID
                       </TableHeading>
                       <TableHeading
+                        name="meja"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortChanged={sortChanged}
+                      >
+                        Meja
+                      </TableHeading>
+                      <TableHeading
                         name="total_harga"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
@@ -112,6 +120,7 @@ export default function index({ orders, orderItems, queryParams = null }) {
                   </thead>
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                     <tr className="text-nowrap">
+                      <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
@@ -144,6 +153,9 @@ export default function index({ orders, orderItems, queryParams = null }) {
                           <td className="px-3 py-2">{order.id}</td>
                           <td className="px-3 py-2 text-nowrap">
                             {order.user_id}
+                          </td>
+                          <td className="px-3 py-2">
+                            {order.meja || "Tidak ada"}
                           </td>
                           <td className="px-3 py-2 text-nowrap">
                             {order.total_harga}
