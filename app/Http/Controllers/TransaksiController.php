@@ -17,6 +17,7 @@ class TransaksiController extends Controller
     public function index()
     {
         $query = Transaksi::query();
+        
 
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');

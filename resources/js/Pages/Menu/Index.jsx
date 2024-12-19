@@ -66,8 +66,10 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
     router.get(route("menu.index"), queryParams);
   };
 
-  const handleDelete = (e) => {
-    e.preventDefault(); // Mencegah link melakukan aksi default
+  const handleDelete = (e, id) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    } // Mencegah link melakukan aksi default
 
     Swal.fire({
       title: "Apakah Anda Yakin ingin Menghapus Menu ?",
@@ -79,19 +81,7 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
       confirmButtonText: "Hapus",
     }).then((result) => {
       if (result.isConfirmed) {
-        router.delete(route("menu.destroy", id), {
-          onSuccess: () => {
-            toast.success("Menu berhasil dihapus!", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-          },
-        });
+        router.delete(route("menu.destroy", id));
       }
     });
   };
@@ -139,14 +129,7 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
                       >
                         Nama
                       </TableHeading>
-                      <TableHeading
-                        name="kategori"
-                        sort_field={queryParams.sort_field}
-                        sort_direction={queryParams.sort_direction}
-                        sortChanged={sortChanged}
-                      >
-                        Kategori
-                      </TableHeading>
+                      <th className="px-3 py-3">Kategori</th>
                       <TableHeading
                         name="harga"
                         sort_field={queryParams.sort_field}
@@ -176,7 +159,7 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
                       </th>
                       <th className="px-3 py-3">
                         <SelectInput
-                          className="w-full"
+                          className="w-30"
                           defaultValue={queryParams.kategori}
                           onChange={(e) =>
                             searchFieldChanged("kategori", e.target.value)
@@ -228,7 +211,7 @@ export default function Index({ menus, kategori, queryParams = null, flash }) {
                             Edit
                           </Link>
                           <button
-                            onClick={(e) => deleteProject(menu)}
+                            onClick={(e) => handleDelete(e, menu.id)}
                             className="font-medium text-red-600 
                           dark:text-red-500 hover:underline mx-1"
                           >

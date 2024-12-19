@@ -104,14 +104,7 @@ export default function index({
                       >
                         Total Harga
                       </TableHeading>
-                      <TableHeading
-                        name="status"
-                        sort_field={queryParams.sort_field}
-                        sort_direction={queryParams.sort_direction}
-                        sortChanged={sortChanged}
-                      >
-                        Status
-                      </TableHeading>
+                      <th className="px-3 py-3">Status</th>
                       <TableHeading
                         name="created_at"
                         sort_field={queryParams.sort_field}
