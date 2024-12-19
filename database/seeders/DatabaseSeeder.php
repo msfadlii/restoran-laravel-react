@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PaymentMethod;
 use App\Models\StatusMeja;
 use App\Models\StatusOrder;
 use App\Models\Transaksi;
@@ -62,6 +63,12 @@ class DatabaseSeeder extends Seeder
 
         foreach ($statusOrder as $status) {
             StatusOrder::create(['status' => $status]);
+        }
+
+        $paymentMethod = ['cash', 'credit_card', 'bank_transfer'];
+
+        foreach ($paymentMethod as $nama) {
+            PaymentMethod::create(['nama' => $nama]);
         }
 
         Menu::factory(10)->create();

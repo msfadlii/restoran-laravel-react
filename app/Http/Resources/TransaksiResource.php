@@ -19,7 +19,7 @@ class TransaksiResource extends JsonResource
             'id' => $this->id,
             'order_id' => $this->order_id,
             'amount' => $this->amount,
-            'payment_method' => $this->payment_method,
+            'payment_method' => $this->paymentMethod->nama,
             'created_at' => Carbon::parse($this->created_at)->format('d-m-Y H:i:s'),
             'user_name' => $this->order && $this->order->user ? $this->order->user->name : 'Tidak Dikenal',
         ];
