@@ -1,27 +1,24 @@
 import Pagination from "@/Components/Pagination";
 import SelectInput from "@/Components/SelectInput";
+import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
-import { ORDER_STATUS_CLASS_MAP, ORDER_STATUS_TEXT_MAP } from "@/constants";
 import { useState } from "react";
 
-export default function index({
-  orders,
-  orderItems,
-  statusOrders,
-  queryParams = null,
-}) {
+export default function Index({ reservations, status, queryParams = null }) {
   queryParams = queryParams || {};
 
   const searchFieldChanged = (nama, value) => {
+    const updatedQueryParams = { ...queryParams };
     if (value) {
-      queryParams[nama] = value;
+      updatedQueryParams[nama] = value;
     } else {
-      delete queryParams[nama];
+      delete updatedQueryParams[nama];
     }
-
-    router.get(route("order.index"), queryParams);
+    router.get(route("reservasi.index"), updatedQueryParams, {
+      preserveState: true,
+    });
   };
 
   const onKeyPress = (nama, e) => {
@@ -41,13 +38,12 @@ export default function index({
       queryParams.sort_field = nama;
       queryParams.sort_direction = "asc";
     }
-    router.get(route("order.index"), queryParams);
+    router.get(route("reservasi.index"), queryParams);
   };
 
   const [selectedRow, setSelectedRow] = useState(null);
 
   const toggleRow = (id) => {
-    //Jika baris diklik tutup detail
     if (selectedRow === id) {
       setSelectedRow(null);
     } else {
@@ -59,11 +55,11 @@ export default function index({
     <AuthenticatedLayout
       header={
         <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-          Order
+          Reservation
         </h2>
       }
     >
-      <Head title="Order" />
+      <Head title="Reservation" />
       <div className="py-12">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
@@ -80,16 +76,9 @@ export default function index({
                       >
                         ID
                       </TableHeading>
+                      <th className="px-3 py-3">Nama Customer</th>
                       <TableHeading
-                        name="user_id"
-                        sort_field={queryParams.sort_field}
-                        sort_direction={queryParams.sort_direction}
-                        sortChanged={sortChanged}
-                      >
-                        User ID
-                      </TableHeading>
-                      <TableHeading
-                        name="meja"
+                        name="meja_id"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
@@ -97,21 +86,21 @@ export default function index({
                         Meja
                       </TableHeading>
                       <TableHeading
-                        name="total_harga"
+                        name="jumlah_tamu"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Total Harga
+                        Jumlah Tamu
                       </TableHeading>
                       <th className="px-3 py-3">Status</th>
                       <TableHeading
-                        name="created_at"
+                        name="tanggal_reservasi"
                         sort_field={queryParams.sort_field}
                         sort_direction={queryParams.sort_direction}
                         sortChanged={sortChanged}
                       >
-                        Create Date
+                        Tanggal
                       </TableHeading>
                       <th className="px-3 py-3">Action</th>
                     </tr>
@@ -119,21 +108,34 @@ export default function index({
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                     <tr className="text-nowrap">
                       <th className="px-3 py-3"></th>
-                      <th className="px-3 py-3"></th>
+                      <th className="px-3 py-3">
+                        <TextInput
+                          className="w-full"
+                          defaultValue={queryParams.user}
+                          placeholder="Nama Customer"
+                          onBlur={(e) =>
+                            searchFieldChanged("user", e.target.value)
+                          }
+                          onKeyPress={(e) => onKeyPress("user", e)}
+                        />
+                      </th>
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3">
                         <SelectInput
                           className="w-full"
-                          defaultValue={queryParams.status}
+                          defaultValue={queryParams.status_reservasi}
                           onChange={(e) =>
-                            searchFieldChanged("status", e.target.value)
+                            searchFieldChanged(
+                              "status_reservasi",
+                              e.target.value
+                            )
                           }
                         >
                           <option value="">Select Status</option>
-                          {statusOrders.map((status) => (
-                            <option key={status.id} value={status.status}>
-                              {status.status}
+                          {status.map((st) => (
+                            <option key={st.id} value={st.status}>
+                              {st.status}
                             </option>
                           ))}
                         </SelectInput>
@@ -143,37 +145,39 @@ export default function index({
                     </tr>
                   </thead>
                   <tbody>
-                    {orders.data.map((order) => (
+                    {reservations.data.map((reservation) => (
                       <>
                         <tr
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                          key={order.id}
-                          onClick={() => toggleRow(order.id)}
+                          key={reservation.id}
+                          onClick={() => toggleRow(reservation.id)}
                         >
-                          <td className="px-3 py-2">{order.id}</td>
+                          <td className="px-3 py-2">{reservation.id}</td>
                           <td className="px-3 py-2 text-nowrap">
-                            {order.user_id}
+                            {reservation.user}
                           </td>
                           <td className="px-3 py-2">
-                            {order.meja || "Tidak ada"}
+                            {reservation.meja || "Tidak ada"}
                           </td>
                           <td className="px-3 py-2 text-nowrap">
-                            {order.total_harga}
+                            {reservation.jumlah_tamu}
                           </td>
-                          <td className="px-3 py-2">{order.status}</td>
+                          <td className="px-3 py-2">
+                            {reservation.status_reservasi}
+                          </td>
                           <td className="px-3 py-2 text-nowrap">
-                            {order.created_at}
+                            {reservation.tanggal_reservasi}
                           </td>
                           <td className="px-3 py-2 text-nowrap">
                             <Link
-                              href={route("order.show", order.id)}
+                              href={route("reservasi.show", reservation.id)}
                               className="font-medium text-orange-600 dark:text-orange-500 hover:underline mx-1"
                               onClick={(e) => e.stopPropagation()}
                             >
                               Detail
                             </Link>
                             <Link
-                              href={route("order.edit", order.id)}
+                              href={route("reservasi.edit", reservation.id)}
                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -182,7 +186,7 @@ export default function index({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                deleteProject(order);
+                                deleteProject(reservation);
                               }}
                               className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                             >
@@ -190,43 +194,26 @@ export default function index({
                             </button>
                           </td>
                         </tr>
-                        {selectedRow === order.id && (
+                        {selectedRow === reservation.id && (
                           <tr className="bg-gray-100 dark:bg-gray-700">
                             <td
                               colSpan="6"
                               className="px-3 py-2 text-gray-700 dark:text-gray-200"
                             >
                               <div>
-                                <strong>Detail Order : </strong>
-                                {orderItems?.filter(
-                                  (item) => item.order_id === order.id
-                                ).length > 0 ? (
-                                  orderItems
-                                    .filter(
-                                      (item) => item.order_id === order.id
-                                    )
-                                    .map((item) => (
-                                      <div key={item.id} className="mt-2">
-                                        <hr className="border-t-2 border-gray-300 dark:border-gray-600 mt-2" />
-                                        <p>
-                                          <strong>Menu:</strong>{" "}
-                                          {item.menu?.nama || "N/A"}
-                                        </p>
-                                        <p>
-                                          <strong>Quantity:</strong>{" "}
-                                          {item.quantity}
-                                        </p>
-                                        <p>
-                                          <strong>Harga:</strong> Rp.{" "}
-                                          {item.menu.harga}
-                                        </p>
-                                      </div>
-                                    ))
-                                ) : (
-                                  <p>
-                                    Tidak ada detail untuk Order ID {order.id}.
-                                  </p>
-                                )}
+                                <strong>Detail Reservasi: </strong>
+                                <p>
+                                  <strong>Tanggal Reservasi:</strong>{" "}
+                                  {reservation.tanggal_reservasi}
+                                </p>
+                                <p>
+                                  <strong>Jumlah Tamu:</strong>{" "}
+                                  {reservation.jumlah_tamu}
+                                </p>
+                                <p>
+                                  <strong>Status:</strong>{" "}
+                                  {reservation.status_reservasi?.status}
+                                </p>
                               </div>
                             </td>
                           </tr>
@@ -236,7 +223,7 @@ export default function index({
                   </tbody>
                 </table>
               </div>
-              <Pagination links={orders.meta.links} />
+              <Pagination links={reservations.meta.links} />
             </div>
           </div>
         </div>

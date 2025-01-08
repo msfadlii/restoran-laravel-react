@@ -14,7 +14,6 @@ class MejaController extends Controller
     {  
         $query = Meja::query();
         $statusMeja = StatusMeja::all();
-
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 

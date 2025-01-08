@@ -9,8 +9,10 @@ use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentMethod;
+use App\Models\Reservation;
 use App\Models\StatusMeja;
 use App\Models\StatusOrder;
+use App\Models\StatusReservasi;
 use App\Models\Transaksi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -59,6 +61,12 @@ class DatabaseSeeder extends Seeder
             Meja::create($meja);
         }
 
+        $statusReservasi = ['Konfirmasi', 'Cancel'];
+
+        foreach ($statusReservasi as $status) {
+            StatusReservasi::create(['status' => $status]);
+        }
+
         $statusOrder = ['Selesai', 'Cancel', 'Pending'];
 
         foreach ($statusOrder as $status) {
@@ -82,5 +90,7 @@ class DatabaseSeeder extends Seeder
                 'amount' => $order->total_harga,
             ]);
         });
+
+        Reservation::factory(10)->create();
     }
 }

@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, router, useForm } from "@inertiajs/react";
 
 export default function Edit({ meja, statuses }) {
   const { data, setData, put, processing, errors } = useForm({
@@ -10,6 +10,10 @@ export default function Edit({ meja, statuses }) {
   const submit = (e) => {
     e.preventDefault();
     put(route("meja.update", meja.id));
+  };
+
+  const handleCancel = () => {
+    router.get(route("meja.index"));
   };
 
   return (
@@ -43,7 +47,9 @@ export default function Edit({ meja, statuses }) {
                     }`}
                   />
                   {errors.no_meja && (
-                    <p className="mt-2 text-sm text-red-600">{errors.no_meja}</p>
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.no_meja}
+                    </p>
                   )}
                 </div>
 
@@ -70,7 +76,9 @@ export default function Edit({ meja, statuses }) {
                     ))}
                   </select>
                   {errors.status_meja_id && (
-                    <p className="mt-2 text-sm text-red-600">{errors.status_meja_id}</p>
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.status_meja_id}
+                    </p>
                   )}
                 </div>
 

@@ -13,7 +13,12 @@ class Meja extends Model
 
     public function statusMeja()
     {
-        return $this->belongsTo(StatusMeja::class);
+        return $this->belongsTo(StatusMeja::class, 'status_meja_id');
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 
     public function orders()

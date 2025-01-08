@@ -55,6 +55,12 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                   Meja
                 </NavLink>
+                <NavLink
+                  href={route("reservasi.index")}
+                  active={route().current("reservasi.index")}
+                >
+                  Reservasi
+                </NavLink>
               </div>
             </div>
 

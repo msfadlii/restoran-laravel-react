@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Create({statuses}) {
+export default function Create({ statuses }) {
   const { data, setData, post, processing, errors } = useForm({
     no_meja: "",
     status_meja_id: "",
@@ -43,7 +43,9 @@ export default function Create({statuses}) {
                     }`}
                   />
                   {errors.no_meja && (
-                    <p className="mt-2 text-sm text-red-600">{errors.no_meja}</p>
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.no_meja}
+                    </p>
                   )}
                 </div>
 
@@ -74,7 +76,7 @@ export default function Create({statuses}) {
                   )}
                 </div>
 
-                <div className="flex items-center justify-end">
+                <div className="mt-auto flex justify-end space-x-2">
                   <Link
                     href={route("meja.index")}
                     className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"

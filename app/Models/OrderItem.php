@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderItemFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -26,7 +25,7 @@ class OrderItem extends Model
         return $this->belongsTo(Menu::class);
     }
     public function orderItems()
-{
-    return $this->hasMany(OrderItem::class);
-}
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
