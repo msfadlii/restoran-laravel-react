@@ -53,7 +53,6 @@ export default function CreateMenu({ kategori }) {
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <form onSubmit={handleSubmit}>
                 <div className="space-y-6">
-                  {/* Nama Menu */}
                   <div>
                     <label
                       htmlFor="nama"
@@ -70,7 +69,6 @@ export default function CreateMenu({ kategori }) {
                     />
                   </div>
 
-                  {/* Kategori */}
                   <div>
                     <label
                       htmlFor="kategori"
@@ -94,7 +92,6 @@ export default function CreateMenu({ kategori }) {
                     </SelectInput>
                   </div>
 
-                  {/* Harga */}
                   <div>
                     <label
                       htmlFor="harga"
@@ -112,7 +109,6 @@ export default function CreateMenu({ kategori }) {
                     />
                   </div>
 
-                  {/* Deskripsi */}
                   <div>
                     <label
                       htmlFor="deskripsi"
@@ -129,7 +125,6 @@ export default function CreateMenu({ kategori }) {
                     />
                   </div>
 
-                  {/* Gambar */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Gambar
@@ -139,7 +134,7 @@ export default function CreateMenu({ kategori }) {
                       name="image"
                       accept="image/*"
                       onChange={handleFileChange}
-                      className="mt-1 block w-full text-sm text-gray-900 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-300"
+                      className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-300"
                     />
                     {errors.image && (
                       <div className="mt-2 text-sm text-red-600">
@@ -148,8 +143,13 @@ export default function CreateMenu({ kategori }) {
                     )}
                   </div>
 
-                  {/* Tombol Submit */}
-                  <div className="mt-auto flex justify-end">
+                  <div className="mt-auto flex justify-end space-x-2">
+                    <Link
+                      href={route("menu.index")}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                    >
+                      Batal
+                    </Link>
                     <button
                       type="submit"
                       className="py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"

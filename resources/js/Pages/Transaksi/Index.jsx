@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Pagination from "@/Components/Pagination";
 import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 
-export default function TransaksiIndex({ transaksis, queryParams = null }) {
+export default function TransaksiIndex({
+  transaksis,
+  paymentMethod,
+  queryParams = null,
+}) {
   queryParams = queryParams || {};
 
   const searchFieldChanged = (nama, value) => {
@@ -127,8 +131,11 @@ export default function TransaksiIndex({ transaksis, queryParams = null }) {
                           }
                         >
                           <option value="">Select Payment Method</option>
-                          <option value="cash">Cash</option>
-                          <option value="bank_transfer">Bank Transfer</option>
+                          {paymentMethod.map((pay) => (
+                            <option key={pay.id} value={pay.nama}>
+                              {formatPaymentMethod(pay.nama)}
+                            </option>
+                          ))}
                         </SelectInput>
                       </th>
                       <th className="px-3 py-3"></th>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm, Link } from "@inertiajs/react";
+import { router, useForm, Link } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 export default function Edit({ order, menus, mejaList }) {
@@ -7,13 +7,12 @@ export default function Edit({ order, menus, mejaList }) {
     status: order.status || "",
     meja_id: order.meja_id || "",
     menu_items: order.menu_items || [],
-    total_price: order.total_price || 0, // Harga total awal
+    total_price: order.total_price || 0,
   });
 
-  const [selectedMenu, setSelectedMenu] = useState(""); // ID menu yang dipilih
-  const [menuQuantity, setMenuQuantity] = useState(1); // Jumlah menu yang dipilih
+  const [selectedMenu, setSelectedMenu] = useState("");
+  const [menuQuantity, setMenuQuantity] = useState(1);
 
-  // Menambahkan item menu ke pesanan
   const addMenuItem = () => {
     if (data.menu_items.length >= 3) {
       alert("You can only add up to 3 items.");
@@ -45,7 +44,6 @@ export default function Edit({ order, menus, mejaList }) {
     setData("menu_items", menuItems);
   };
 
-  // Menangani pengiriman form untuk memperbarui pesanan
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -163,7 +161,6 @@ export default function Edit({ order, menus, mejaList }) {
                   </div>
                 </div>
 
-                {/* List Added Menu Items */}
                 <div className="mb-4">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">
                     Added Items
@@ -190,7 +187,6 @@ export default function Edit({ order, menus, mejaList }) {
                   </ul>
                 </div>
 
-                {/* Total Price */}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Total Price: Rp
@@ -198,8 +194,13 @@ export default function Edit({ order, menus, mejaList }) {
                   </label>
                 </div>
 
-                {/* Submit Button */}
-                <div className="flex justify-end">
+                <div className="mt-auto flex justify-end space-x-2">
+                  <Link
+                    href={route("order.index")}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  >
+                    Batal
+                  </Link>
                   <button
                     type="submit"
                     className="px-4 py-2 bg-blue-600 text-white rounded-md"

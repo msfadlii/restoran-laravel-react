@@ -3,13 +3,45 @@ import { Head, Link, router } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
 import TableHeading from "@/Components/TableHeading";
 import SelectInput from "@/Components/SelectInput";
+import { useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import Swal from "sweetalert2";
 
-export default function Index({ mejas = { data: [], meta: { links: [] } }, queryParams = {} }) {
-  // Default queryParams jika tidak ada
+export default function Index({
+  mejas = { data: [], meta: { links: [] } },
+  statusMeja,
+  queryParams = {},
+  flash,
+}) {
+  useEffect(() => {
+    if (flash?.success) {
+      toast.success(flash.success, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
+    if (flash?.error) {
+      toast.error(flash.error, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }, [flash]);
+
   queryParams = queryParams || {};
 
   const sortChanged = (nama) => {
-    // Mengubah sort_field dan sort_direction berdasarkan klik
     if (nama === queryParams.sort_field) {
       queryParams.sort_direction =
         queryParams.sort_direction === "asc" ? "desc" : "asc";
@@ -21,7 +53,6 @@ export default function Index({ mejas = { data: [], meta: { links: [] } }, query
   };
 
   const searchFieldChanged = (nama, value) => {
-    // Menambahkan atau menghapus queryParams
     if (value) {
       queryParams[nama] = value;
     } else {
@@ -34,10 +65,25 @@ export default function Index({ mejas = { data: [], meta: { links: [] } }, query
     if (e.key !== "Enter") return;
     searchFieldChanged(nama, e.target.value);
   };
-  const handleDelete = (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus meja ini?")) {
-      router.delete(route("meja.destroy", id));
-    }
+
+  const handleDelete = (e, id) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    } // Mencegah link melakukan aksi default
+
+    Swal.fire({
+      title: "Apakah Anda Yakin ingin Menghapus Meja ?",
+      text: "Meja ini akan dihapus secara permanen!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Hapus",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.delete(route("meja.destroy", id));
+      }
+    });
   };
 
   return (
@@ -84,7 +130,6 @@ export default function Index({ mejas = { data: [], meta: { links: [] } }, query
                       </TableHeading>
                       <th className="px-3 py-3">Status</th>
                       <th className="px-3 py-3">Action</th>
-                      
                     </tr>
                   </thead>
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
@@ -92,18 +137,22 @@ export default function Index({ mejas = { data: [], meta: { links: [] } }, query
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3"></th>
                       <th className="px-3 py-3">
-                      <SelectInput
+                        <SelectInput
                           className="w-50"
                           defaultValue={queryParams.status}
                           onChange={(e) =>
                             searchFieldChanged("status", e.target.value)
                           }
                         >
-                          <option value="">Pilih Status</option>
-                          <option value="Tersedia">Tersedia</option>
-                          <option value="Dipesan">Terisi</option>
+                          <option value="">Select Kategori</option>
+                          {statusMeja.map((s) => (
+                            <option key={s.id} value={s.status}>
+                              {s.status}
+                            </option>
+                          ))}
                         </SelectInput>
                       </th>
+                      <th className="px-3 py-3"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -118,21 +167,21 @@ export default function Index({ mejas = { data: [], meta: { links: [] } }, query
                           <td className="px-3 py-2">
                             {meja.status_meja?.status || "Tidak Ada Status"}
                           </td>
-                          <td className="px-3 py-2">
+                          <td className="px-3 py-2 text-nowrap">
                             <Link
                               href={route("meja.edit", meja.id)}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                             >
                               Edit
                             </Link>
-                          </td>
-                          <button
-                              onClick={() => handleDelete(meja.id)}
-                              className="text-red-600 hover:text-red-800"
+                            <button
+                              onClick={(e) => handleDelete(e, meja.id)}
+                              className="font-medium text-red-600 
+                              dark:text-red-500 hover:underline mx-1"
                             >
                               Hapus
                             </button>
-                          
+                          </td>
                         </tr>
                       ))
                     ) : (

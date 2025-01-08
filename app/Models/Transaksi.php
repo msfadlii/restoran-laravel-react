@@ -14,7 +14,7 @@ class Transaksi extends Model
         'order_id',
         'user_id',
         'amount',
-        'payment_method',
+        'payment_method_id',
         'tgl_transaksi',
     ];
 
@@ -22,8 +22,14 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Order::class);
     }
+    
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
 }

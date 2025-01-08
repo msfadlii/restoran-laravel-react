@@ -11,20 +11,17 @@ use Illuminate\Http\Request;
 class MejaController extends Controller
 {
     public function index()
-    {
-        
+    {  
         $query = Meja::query();
-
+        $statusMeja = StatusMeja::all();
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 
-       
         if (request("status")) {
             $query->whereHas('statusMeja', function ($q) {
                 $q->where('status', request("status"));
             });
         }
-
        
         $mejas = $query->with('statusMeja')->orderBy($sortField, $sortDirection)->paginate(10);
 
@@ -32,11 +29,12 @@ class MejaController extends Controller
         return inertia("Meja/Index", [
             "mejas" => MejaResource::collection($mejas),
             "queryParams" => request()->query() ?: null,
+            "statusMeja" => $statusMeja,
         ]);
     }
-        public function create()
+
+    public function create()
     {
-        
         $statuses = StatusMeja::all();
 
         return inertia('Meja/Create', [
@@ -57,7 +55,7 @@ class MejaController extends Controller
         ]);
         
 
-        return redirect()->route('meja.index')->with('success', 'Meja berhasil ditambahkan.');
+        return redirect()->route('meja.index')->with('flash', ['success' => 'Meja berhasil ditambahkan.']);
     }
     public function edit($id)
     {
@@ -83,18 +81,16 @@ class MejaController extends Controller
             'status_meja_id' => $request->status_meja_id,
         ]);
 
-        return redirect()->route('meja.index')->with('success', 'Meja berhasil diperbarui.');
+        return redirect()->route('meja.index')->with('flash', ['success' => 'Meja berhasil diperbarui.']);
     }
-        public function destroy($id)
+
+    public function destroy($id)
     {
       
         $meja = Meja::findOrFail($id);
 
-       
         $meja->delete();
 
-       
-        return redirect()->route('meja.index')->with('success', 'Meja berhasil dihapus.');
+        return redirect()->route('meja.index')->with('flash', ['success' => 'Meja berhasil dihapus.']);
     }
-
 }

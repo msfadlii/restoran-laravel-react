@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TransaksiResource;
+use App\Models\PaymentMethod;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
@@ -17,12 +18,15 @@ class TransaksiController extends Controller
     public function index()
     {
         $query = Transaksi::query();
+        $paymentMethod = PaymentMethod::all();
 
         $sortField = request("sort_field", 'id');
         $sortDirection = request("sort_direction", 'desc');
 
         if (request("payment_method")) {
-            $query->where("payment_method", "like", "%" . request("payment_method") . "%");
+            $query->whereHas('paymentMethod', function($query) {
+                $query->where('nama', request("payment_method"));
+            });
         }
 
         if (request("tgl_transaksi")) {
@@ -36,6 +40,7 @@ class TransaksiController extends Controller
         return inertia("Transaksi/Index", [
             "transaksis" => TransaksiResource::collection($transaksis),
             "queryParams" => request()->query() ?: null,
+            "paymentMethod" => $paymentMethod,
         ]);
     }
 
