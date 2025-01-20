@@ -26,7 +26,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
               <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <NavLink
-                  href={route("dashboard")}
+                  href={route("admin.dashboard")}
                   active={route().current("dashboard")}
                 >
                   Dashboard
@@ -96,7 +96,7 @@ export default function AuthenticatedLayout({ header, children }) {
                       Profile
                     </Dropdown.Link>
                     <Dropdown.Link
-                      href={route("logout")}
+                      href={route("admin.logout")}
                       method="post"
                       as="button"
                     >
@@ -153,8 +153,8 @@ export default function AuthenticatedLayout({ header, children }) {
         >
           <div className="space-y-1 pb-3 pt-2">
             <ResponsiveNavLink
-              href={route("dashboard")}
-              active={route().current("dashboard")}
+              href={route("admin.dashboard")}
+              active={route().current("admin.dashboard")}
             >
               Dashboard
             </ResponsiveNavLink>
@@ -176,7 +176,7 @@ export default function AuthenticatedLayout({ header, children }) {
               </ResponsiveNavLink>
               <ResponsiveNavLink
                 method="post"
-                href={route("logout")}
+                href={route("admin.logout")}
                 as="button"
               >
                 Log Out
