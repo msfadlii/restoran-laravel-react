@@ -3,7 +3,7 @@ import { useForm, Link, router } from "@inertiajs/react";
 
 const Index = ({ mejas, user_id }) => {
   const { data, setData, post, processing, errors } = useForm({
-    user_id: user_id || "",
+    user_id: user_id?.id || "",
     meja_id: "",
     date: "",
     guests: "",
@@ -16,6 +16,7 @@ const Index = ({ mejas, user_id }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(data);
     post(route("reservasi-meja"), {
       onSuccess: () => {
         router.get(route("beranda"));
@@ -40,7 +41,7 @@ const Index = ({ mejas, user_id }) => {
                 Tanggal Reservasi
               </label>
               <input
-                type="date"
+                type="datetime-local"
                 id="date"
                 name="date"
                 value={data.date}
