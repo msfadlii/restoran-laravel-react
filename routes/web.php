@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -30,8 +31,8 @@ Route::middleware('auth')->group(function () {
 });
 
 //Rute Client
-Route::middleware(['auth', 'verified'])->group(function () {
-    
+Route::middleware(['auth'])->group(function () {
+    Route::get('/book-table', [LandingPageController::class, 'create'])->name('booktable');
 });
 
 require __DIR__.'/auth.php';
