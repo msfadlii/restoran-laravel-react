@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Meja;
 use App\Models\Reservasi;
+use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class LandingPageController extends Controller
 {
@@ -57,6 +59,16 @@ class LandingPageController extends Controller
         ]);
     
         return redirect()->route('beranda')->with('flash', ['success' => 'Reservasi berhasil!']);
+    }
+    public function show()
+    {
+        // Ambil semua reservasi milik pengguna yang sedang login
+        $reservations = Reservasi::where('user_id', Auth::id())->get();
+
+        // Kirim data reservasi ke tampilan React (Inertia)
+        return Inertia::render('Client/components/book_table/show', [
+            'reservations' => $reservations,
+        ]);
     }
 
 }

@@ -125,7 +125,7 @@ function LandingPage({ flash }) {
                 </Link>
               </li>
               <li>
-                <Link href="" className="btn-getstarted">
+                <Link href="/reservasi-meja/show" className="btn-getstarted">
                   Reservasi Anda
                 </Link>
               </li>
