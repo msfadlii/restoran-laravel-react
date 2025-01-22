@@ -17,7 +17,7 @@ class Menu extends Model
         'deskripsi',
         'image',
     ];
-
+    
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

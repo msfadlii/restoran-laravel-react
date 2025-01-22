@@ -79,9 +79,9 @@ class DatabaseSeeder extends Seeder
             PaymentMethod::create(['nama' => $nama]);
         }
 
-        Menu::factory(10)->create();
+        Menu::factory(20)->create();
 
-        Order::factory(5)->create()->each(function ($order) {
+        Order::factory(20)->create()->each(function ($order) {
             $item = OrderItem::factory()->create(['order_id' => $order->id]);
             $order->update(['total_harga' => $item->quantity * $item->menu->harga]);
             
