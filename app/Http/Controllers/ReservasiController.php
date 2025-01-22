@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ReservasiResource;
 use App\Models\Meja;
+use App\Models\Reservasi;
 use App\Models\Reservation;
 use App\Models\StatusReservasi;
 use App\Models\User;
@@ -13,7 +14,7 @@ class ReservasiController extends Controller
 {
     public function index()
     {
-        $query = Reservation::query();
+        $query = Reservasi::query();
         $status = StatusReservasi::all();
 
         $sortField = request("sort_field", 'id');
@@ -64,7 +65,7 @@ class ReservasiController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $reservation = new Reservation();
+        $reservation = new Reservasi();
         $reservation->user_id = $request->user_id;
         $reservation->meja_id = $request->meja_id;
         $reservation->tanggal_reservasi = $request->tanggal_reservasi;
@@ -79,7 +80,7 @@ class ReservasiController extends Controller
 
     public function show($id)
     {
-        $reservation = Reservation::with(['user.orders.orderItems.menu', 'statusReservasi'])->findOrFail($id);
+        $reservation = Reservasi::with(['user.orders.orderItems.menu', 'statusReservasi'])->findOrFail($id);
         // dd($reservation->statusReservasi);
         return inertia('Reservasi/Show', [
             'reservasi' => $reservation,
@@ -88,7 +89,7 @@ class ReservasiController extends Controller
 
     public function edit(string $id)
     {
-        $reservation = Reservation::findOrFail($id);
+        $reservation = Reservasi::findOrFail($id);
         $meja = Meja::with('statusMeja')->get();
         $status = StatusReservasi::all();
         $users = User::all();
@@ -112,7 +113,7 @@ class ReservasiController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $reservation = Reservation::find($id);
+        $reservation = Reservasi::find($id);
 
         if (!$reservation) {
             return redirect()->route('reservasi.index')->with('flash', ['error' => 'Reservasi tidak ditemukan!']);
@@ -132,7 +133,7 @@ class ReservasiController extends Controller
 
     public function destroy(string $id)
     {
-        $reservation = Reservation::findOrFail($id);
+        $reservation = Reservasi::findOrFail($id);
         $reservation->delete();
 
         return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil dihapus!');
