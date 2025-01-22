@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\MenuController;
@@ -13,7 +14,7 @@ use Inertia\Inertia;
 
 //Rute admin
 Route::prefix('admin')->middleware(['auth'])->group(function() {
-    Route::get('/dashboard', fn() => Inertia::render('Dashboard'))
+    Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
 
     Route::resource('menu', MenuController::class);
@@ -21,6 +22,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function() {
     Route::resource('transaksi', TransaksiController::class);
     Route::resource('meja', MejaController::class);
     Route::resource('reservasi', ReservasiController::class);
+   
+    
     
 });
 
