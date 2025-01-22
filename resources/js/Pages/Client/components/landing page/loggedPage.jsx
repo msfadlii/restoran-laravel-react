@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Swiper from "swiper/bundle";
@@ -91,13 +91,18 @@ function LandingPage() {
 
             <ul className="d-flex list-unstyled mb-0 ml-auto">
               <li>
-                <Link href={route("login")} className="btn-getstarted">
-                  Login
+                <Link href="/book-meja" className="btn-getstarted">
+                  Booking Meja
                 </Link>
               </li>
               <li>
-                <Link href="/register" className="btn-getstarted">
-                  Register
+                <Link href="" className="btn-getstarted">
+                  Reservasi Anda
+                </Link>
+              </li>
+              <li>
+                <Link href="/logout" className="btn-getstarted">
+                  Logout
                 </Link>
               </li>
             </ul>

@@ -1,17 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./components/landing page/landingPage";
-import Login from "./components/auth/loginForm";
-import Register from "./components/auth/signupForm";
-import AccountBox from "./components/auth/index";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 import Home from "./components/home/home";
+import BookTable from "./components/book_table/Index";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<AccountBox />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        {/* <Route path="/book-table" element={<BookTable />} /> */}
         <Route path="/home" element={<Home />} />
       </Routes>
     </>

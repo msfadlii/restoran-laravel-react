@@ -32,7 +32,9 @@ Route::middleware('auth')->group(function () {
 
 //Rute Client
 Route::middleware(['auth'])->group(function () {
-    Route::get('/book-table', [LandingPageController::class, 'create'])->name('booktable');
+    Route::get('/beranda', [LandingPageController::class, 'beranda'])->name('beranda');
+    Route::get('/book-meja', [LandingPageController::class, 'book_meja'])->name('bookmeja');
+    Route::post('/reservasi-meja', [LandingPageController::class, 'store'])->name('reservasi-meja');
 });
 
 require __DIR__.'/auth.php';
