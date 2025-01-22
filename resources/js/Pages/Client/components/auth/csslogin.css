@@ -1,0 +1,34 @@
+/* File: Login.css */
+body {
+    background: linear-gradient(to bottom right, #ff7e5f, #feb47b);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Arial", sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.card {
+    border-radius: 15px;
+}
+
+.card h2 {
+    color: #333;
+}
+
+.card .btn-primary {
+    background-color: #ff7e5f;
+    border-color: #ff7e5f;
+    transition: background-color 0.3s ease;
+}
+
+.card .btn-primary:hover {
+    background-color: #feb47b;
+    border-color: #feb47b;
+}

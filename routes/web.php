@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -10,32 +11,16 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
-
-Route::redirect('/', '/dashboard');
-
-Route::middleware(['auth', 'verified'])->group(function() {
-    // Route::get('/dashboard', function () {
-    //     return Inertia::render('Dashboard');
-    // });
+//Rute admin
+Route::prefix('admin')->middleware(['auth'])->group(function() {
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'))
-        ->name('dashboard');
+        ->name('admin.dashboard');
 
     Route::resource('menu', MenuController::class);
     Route::resource('order', OrderController::class);
     Route::resource('transaksi', TransaksiController::class);
     Route::resource('meja', MejaController::class);
     Route::resource('reservasi', ReservasiController::class);
-    //Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    //Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
     
 });
 
@@ -45,9 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
-Route::resource('menu', MenuController::class);
-
-
+//Rute Client
+Route::middleware(['auth'])->group(function () {
+    Route::get('/book-table', [LandingPageController::class, 'create'])->name('booktable');
+});
 
 require __DIR__.'/auth.php';
