@@ -15,7 +15,7 @@ class AuthenticatedSessionController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('Client/components/auth/index', [
+        return Inertia::render('Client/components/auth/Login', [
             'status' => session('status'),
         ]);
     }
@@ -26,7 +26,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('booktable', absolute: false));
+        return redirect()->intended(route('beranda', absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse
