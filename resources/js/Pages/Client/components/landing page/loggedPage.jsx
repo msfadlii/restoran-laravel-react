@@ -15,8 +15,11 @@ import image1 from "../../assets/landing_page/img/eventsimg/events-1.jpg";
 import image2 from "../../assets/landing_page/img/eventsimg/events-2.jpg";
 import image3 from "../../assets/landing_page/img/eventsimg/events-3.jpg";
 import image4 from "../../assets/landing_page/img/eventsimg/events-4.jpg";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 
-function LandingPage() {
+function LandingPage({ flash }) {
   useEffect(() => {
     AOS.init();
     const swiper = new Swiper(".init-swiper", {
@@ -43,6 +46,32 @@ function LandingPage() {
       },
     });
   }, []);
+
+  useEffect(() => {
+    if (flash?.success) {
+      toast.success(flash.success, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
+    if (flash?.error) {
+      toast.error(flash.error, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }, [flash]);
 
   useEffect(() => {
     AOS.init({ duration: 1200 });
@@ -101,7 +130,12 @@ function LandingPage() {
                 </Link>
               </li>
               <li>
-                <Link href="/logout" className="btn-getstarted">
+                <Link
+                  href={route("logout")}
+                  method="post"
+                  as="button"
+                  className="btn-getstarted"
+                >
                   Logout
                 </Link>
               </li>
