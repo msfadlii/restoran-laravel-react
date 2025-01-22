@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/beranda', [LandingPageController::class, 'beranda'])->name('beranda');
     Route::get('/book-meja', [LandingPageController::class, 'book_meja'])->name('bookmeja');
     Route::post('/reservasi-meja', [LandingPageController::class, 'store'])->name('reservasi-meja');
+    Route::get('/reservasi-meja/show', [LandingPageController::class, 'show'])->name('showreservasi.show');
 });
 
 require __DIR__.'/auth.php';
